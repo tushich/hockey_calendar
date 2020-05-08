@@ -1,2 +1,8 @@
 /src/main/Resources/stern-calendar.json
 /.idea/
+/.gradle/
+/gradle/
+gradlew
+gradlew.bat
+/build/
+.gitignore
