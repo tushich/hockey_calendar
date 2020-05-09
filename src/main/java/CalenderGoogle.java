@@ -1,23 +1,17 @@
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
-import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
-import com.google.api.services.calendar.model.Events;
+import com.google.auth.http.HttpCredentialsAdapter;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.google.auth.oauth2.GoogleCredentials;
 
 import java.io.*;
 import java.security.GeneralSecurityException;
@@ -29,35 +23,32 @@ import java.util.Date;
 import java.util.List;
 
 public class CalenderGoogle {
-    private static final String APPLICATION_NAME = "SPBHL синхронизация";
+    private static final String APPLICATION_NAME = "SPBHL синхронизация"; // TODO вынести в настройки
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String TOKENS_DIRECTORY_PATH = "tokens";
-    private static NetHttpTransport HTTP_TRANSPORT = null;
     private static Calendar service = null;
-    private static boolean clientAuth = false; // Атунтификация на клиенте или сервере
-    public String calendarID = "ieesvcpisvro03mobsrnv54k5o@group.calendar.google.com";
+    public String calendarID = "ieesvcpisvro03mobsrnv54k5o@group.calendar.google.com"; // TODO вынести в настройки
 
     /**
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
     private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
-    private static final String SERVICE_ACCOUNT_FILE_PATH = "src/main/resources/stern-calendar.json"; // TODO Перевести токен гугл в безопасное хранилище;
+    private static final String SERVICE_ACCOUNT_FILE_PATH = "src/main/resources/stern-calendar.json"; // TODO Перевести токен гугл в безопасное хранилище.Сейчас он в гитигноре;
 
     public CalenderGoogle() throws GeneralSecurityException, IOException {
         // Build a new authorized API client service.
 
-        HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials())
+        NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpCredentialsAdapter(getCredentials()))
                     .setApplicationName(APPLICATION_NAME)
                     .build();
     }
 
-    private static Credential getCredentials() throws IOException {
+    private static GoogleCredentials getCredentials() throws IOException {
 
             // аутентификация на сервере черезх сервисный аккаунт
 
-            return GoogleCredential.fromStream(new FileInputStream(SERVICE_ACCOUNT_FILE_PATH))
+            return GoogleCredentials.fromStream(new FileInputStream(SERVICE_ACCOUNT_FILE_PATH))
                     .createScoped(SCOPES);
 
     }
