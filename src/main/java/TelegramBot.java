@@ -24,7 +24,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private static String PROXY_USER = "1835d413" /* proxy user */;
     private static String PROXY_PASSWORD = "94bc8ba7" /* proxy password */;
 
-    private static String chat_IDs[] = {"196469012", "298799539"};
+    private static String chat_IDs[] = {"196469012"};//, "298799539"};
 
     private static TelegramBot instance;
     private static DefaultBotOptions botOptions = getBotOptions();
