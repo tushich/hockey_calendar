@@ -26,7 +26,8 @@ public class CalenderGoogle {
     private static final String APPLICATION_NAME = "SPBHL синхронизация"; // TODO вынести в настройки
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static Calendar service = null;
-    public String calendarID = "ieesvcpisvro03mobsrnv54k5o@group.calendar.google.com"; // TODO вынести в настройки
+    public String calendarID = "9ophscjc00ssonj4o4kd1tf0a8@group.calendar.google.com"; // TODO вынести в настройки
+    // Календарь штерна "ieesvcpisvro03mobsrnv54k5o@group.calendar.google.com";
 
     /**
      * Global instance of the scopes required by this quickstart.
@@ -47,9 +48,13 @@ public class CalenderGoogle {
     private static GoogleCredentials getCredentials() throws IOException {
 
             // аутентификация на сервере черезх сервисный аккаунт
-
+            InputStream is = new ByteArrayInputStream(new Resources().getResource("google_credential").getBytes());
+            return GoogleCredentials.fromStream(is)
+                    .createScoped(SCOPES);
+            /*
             return GoogleCredentials.fromStream(new FileInputStream(SERVICE_ACCOUNT_FILE_PATH))
                     .createScoped(SCOPES);
+                    */
 
     }
 
@@ -104,7 +109,7 @@ public class CalenderGoogle {
             service.events().insert(calendarID, event).execute();
             System.out.println("Новое событие");
             // TODO добавить массовую рассылку
-            TelegramBot.getInstance().sendMsg("196469012", String.format("Добавлен новый матч:%s. Дата: %s\n%s", Summary, getDateString(event.getStart()), linkMatch));
+            TelegramBot.getInstance().sendMsg(String.format("Добавлен новый матч:%s. Дата: %s\n%s", Summary, getDateString(event.getStart()), linkMatch));
         }
         else
         {
@@ -144,7 +149,7 @@ public class CalenderGoogle {
                 service.events().patch(calendarID, eventId, event).execute();
                 System.out.println(old_event.getSummary() + msg_text);
                 // TODO добавить массовую рассылку по подписчикам
-                TelegramBot.getInstance().sendMsg("196469012", String.format("*%s.*\n %s\n\n%s", Summary, msg_text, linkMatch));
+                TelegramBot.getInstance().sendMsg(String.format("*%s.*\n %s\n\n%s", Summary, msg_text, linkMatch));
             }
 
         }

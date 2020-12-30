@@ -8,8 +8,13 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
+import java.util.Properties;
 
 public class TelegramBot extends TelegramLongPollingBot {
 
@@ -18,6 +23,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     private static Integer PROXY_PORT = 21080 /* proxy port */;
     private static String PROXY_USER = "1835d413" /* proxy user */;
     private static String PROXY_PASSWORD = "94bc8ba7" /* proxy password */;
+
+    private static String chat_IDs[] = {"298799539", "196469012"};
 
     private static TelegramBot instance;
     private static DefaultBotOptions botOptions = getBotOptions();
@@ -69,20 +76,33 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     /**
      * Метод для настройки сообщения и его отправки.
+     * @param s Строка, которую необходимот отправить в качестве сообщения.
+     */
+    public synchronized void sendMsg(String s) {
+        for (String chat_id : chat_IDs) {
+            sendMsgDirect(chat_id, s);
+        }
+
+    }
+
+    /**
+     * Метод для настройки сообщения и его отправки.
      * @param chatId id чата
      * @param s Строка, которую необходимот отправить в качестве сообщения.
      */
-    public synchronized void sendMsg(String chatId, String s) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.enableMarkdown(true);
-        sendMessage.setChatId(chatId);
-        sendMessage.setText(s);
-        try {
-            execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+    public synchronized void sendMsgDirect(String chatId, String s) {
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.enableMarkdown(true);
+            sendMessage.setChatId(chatId);
+            sendMessage.setText(s);
+            try {
+                execute(sendMessage);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+
     }
+
 
     /**
      * Метод для приема сообщений.
@@ -93,7 +113,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         // TODO Добавить возможность пользователю подписываться и отписываться на оповещения
         // TODO Хранить ID чата пользователя в Базе данных. Сделать список рассылки.
         String message = update.getMessage().getText();
-        sendMsg(update.getMessage().getChatId().toString(), message);
+        sendMsgDirect(update.getMessage().getChatId().toString(), message);
     }
 
     /**
@@ -102,7 +122,8 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public String getBotUsername() {
-        return "Stern_Calendar_Bot";
+        return "Red_Bears_Bot";
+        //"Stern_Calendar_Bot";
     }
 
     /**
@@ -111,7 +132,9 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public String getBotToken() {
-        return "1107532532:AAEtHoPQLOrpFGK5TDBUfnU4FHTA8plmzxY"; // TODO Перевести токен в безопасное хранилище
+
+        return new Resources().getResource("token_red_bears_bot");
+        // TODO Сделать одного бота на все команды
     }
 
 }

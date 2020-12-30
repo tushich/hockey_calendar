@@ -12,7 +12,7 @@ public class stern_calender {
         System.setProperty("java.net.useSystemProxies", "true");
 
         // TODO вынести ID команды в настроки ПО
-        TwoDimentionalArrayList<String> tableCalender = siteSPBHL.getTable("http://spbhl.ru/Schedule?TeamID=26cfc0fe-4fde-4a09-ade4-283f0b335bf5");
+        TwoDimentionalArrayList<String> tableCalender = siteSPBHL.getTable("http://spbhl.ru/Schedule?TeamID=1d861135-80ca-4108-bc71-d27a64950a65");
 
         // TODO Перевести хранение данных событий в базу данных.
         CalenderGoogle calender = new CalenderGoogle();
@@ -40,15 +40,15 @@ public class stern_calender {
                 String linkMatch =  (String) tableCalender.getCellValue(i, 8);
                 String count = (String) tableCalender.getCellValue(i, 6);
                 calender.updateEvent(id, summary, startDateTime, endDateTime, linkMatch, protokolExist, count);
-
+                break;
             } catch (Exception e) {
                 System.out.format("\nНе удалось обработать строку %d\n Summary:%s\n Ошибка:%s", i, summary,  e.getMessage());
             }
         }
 
         //TelegramBot.getInstance().sendMsg("196469012","Бот выключен");
-
     }
+
 
 
 }
