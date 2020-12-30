@@ -40,7 +40,6 @@ public class stern_calender {
                 String linkMatch =  (String) tableCalender.getCellValue(i, 8);
                 String count = (String) tableCalender.getCellValue(i, 6);
                 calender.updateEvent(id, summary, startDateTime, endDateTime, linkMatch, protokolExist, count);
-                break;
             } catch (Exception e) {
                 System.out.format("\nНе удалось обработать строку %d\n Summary:%s\n Ошибка:%s", i, summary,  e.getMessage());
             }
