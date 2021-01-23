@@ -7,7 +7,7 @@ public class stern_calender {
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
 
-        //TelegramBot.getInstance().sendMsg("196469012","Бот запущен");
+        TelegramBot.getInstance().startListen();
 
         System.setProperty("java.net.useSystemProxies", "true");
 

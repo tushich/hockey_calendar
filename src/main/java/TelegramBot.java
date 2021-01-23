@@ -4,17 +4,14 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.ApiContext;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
-import java.util.Properties;
+import java.util.List;
 
 public class TelegramBot extends TelegramLongPollingBot {
 
@@ -33,6 +30,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         super(botOptions);
     }
+
 
     public static TelegramBot getInstance() { // #3
         if (instance == null) {        //если объект еще не создан
@@ -75,18 +73,19 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     /**
-     * Метод для настройки сообщения и его отправки.
+     * Метод отправляет сообщения по списку рассылки из БД
      * @param s Строка, которую необходимот отправить в качестве сообщения.
      */
     public synchronized void sendMsg(String s) {
-        for (String chat_id : chat_IDs) {
+        List<String> list = DataBase.getUsersList(new Resources().getResource("teamName"));
+        for (String chat_id : list) {
             sendMsgDirect(chat_id, s);
         }
 
     }
 
     /**
-     * Метод для настройки сообщения и его отправки.
+     * Метод для отправки сообщения.
      * @param chatId id чата
      * @param s Строка, которую необходимот отправить в качестве сообщения.
      */
@@ -110,10 +109,33 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public void onUpdateReceived(Update update) {
-        // TODO Добавить возможность пользователю подписываться и отписываться на оповещения
-        // TODO Хранить ID чата пользователя в Базе данных. Сделать список рассылки.
-        String message = update.getMessage().getText();
-        sendMsgDirect(update.getMessage().getChatId().toString(), message);
+        Message message = update.getMessage();
+        if(message.getText().equals("/start")){
+            boolean allIsOk = DataBase.addUser(message.getChatId().toString(), new Resources().getResource("teamName"), message.getFrom().getFirstName() + " " + message.getFrom().getLastName(), message.getFrom().getUserName());
+            String msg;
+            if(allIsOk) msg = "Добро пожаловать в чат оповещений по ирам команды Красные медведи. " +
+                    "\nПри изменениях на сайте СПБХЛ, вы автоматически получите оповещение." +
+                    "\nЧтобы прекратить получать сообщения введите '/stop'" +
+                    "\nКалендарь всех игр находится тут: https://calendar.google.com/calendar/u/0?cid=OW9waHNjamMwMHNzb25qNG80a2QxdGYwYThAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ";
+            else msg = "Произошла ошибка. Не удалось добавить пользователя.";
+            sendMsgDirect(update.getMessage().getChatId().toString(), msg);
+
+        }
+        else if(message.getText().equals("/stop"))
+        {
+            boolean allIsOk = DataBase.delUser(update.getMessage().getChatId().toString(), new Resources().getResource("teamName"));
+            String msg;
+            if(allIsOk) msg = "Пока и жаль! Чтобы начать общение заново, необходимо написать '/start'";
+            else msg = "Произошла ошибка. Не удалось добавить пользователя.";
+                    sendMsgDirect(update.getMessage().getChatId().toString(), msg);
+
+        }
+        else
+        {
+
+            sendMsgDirect(update.getMessage().getChatId().toString(), "Ошибка: Неизвестная команда чата");
+        }
+
     }
 
     /**

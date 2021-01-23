@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+// TODO: Переделать на интерфейс
 public class Resources {
     public String getResource(String name)
     {
