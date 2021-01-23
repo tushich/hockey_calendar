@@ -11,10 +11,10 @@ public class stern_calender {
 
         System.setProperty("java.net.useSystemProxies", "true");
 
-        // TODO вынести ID команды в настроки ПО
-        TwoDimentionalArrayList<String> tableCalender = siteSPBHL.getTable("http://spbhl.ru/Schedule?TeamID=1d861135-80ca-4108-bc71-d27a64950a65");
+        TwoDimentionalArrayList<String> tableCalender = siteSPBHL.getTable(String.format("http://spbhl.ru/Schedule?TeamID=%s", Resources.getResource("teamIdSpbhl")));
 
-        // TODO Перевести хранение данных событий в базу данных.
+        // TODO Перевести хранение данных событий в базу данных из календаря.
+        // TODO СРавнивать список матчей календарь - сайт и в обратном порядке. Если в матче поменяли нашу команду, то бот не удаляет матч.
         CalenderGoogle calender = new CalenderGoogle();
         for (int i = 1; i < tableCalender.size(); i++) {
             String summary = "";
@@ -44,10 +44,5 @@ public class stern_calender {
                 System.out.format("\nНе удалось обработать строку %d\n Summary:%s\n Ошибка:%s", i, summary,  e.getMessage());
             }
         }
-
-        //TelegramBot.getInstance().sendMsg("196469012","Бот выключен");
     }
-
-
-
 }

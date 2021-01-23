@@ -23,10 +23,10 @@ import java.util.Date;
 import java.util.List;
 
 public class CalenderGoogle {
-    private static final String APPLICATION_NAME = "SPBHL синхронизация"; // TODO вынести в настройки
+    private static final String APPLICATION_NAME = Resources.getResource("APPLICATION_NAME");
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static Calendar service = null;
-    public String calendarID = "9ophscjc00ssonj4o4kd1tf0a8@group.calendar.google.com"; // TODO вынести в настройки
+    public String calendarID = Resources.getResource("calendarID"); // TODO Сделать командный календарь для каждой команды
     // Календарь штерна "ieesvcpisvro03mobsrnv54k5o@group.calendar.google.com";
 
     /**
@@ -34,7 +34,7 @@ public class CalenderGoogle {
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
     private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
-    private static final String SERVICE_ACCOUNT_FILE_PATH = "src/main/resources/stern-calendar.json"; // TODO Перевести токен гугл в безопасное хранилище.Сейчас он в гитигноре;
+    private static final String SERVICE_ACCOUNT_FILE_PATH = "src/main/resources/stern-calendar.json";
 
     public CalenderGoogle() throws GeneralSecurityException, IOException {
         // Build a new authorized API client service.
@@ -48,7 +48,7 @@ public class CalenderGoogle {
     private static GoogleCredentials getCredentials() throws IOException {
 
             // аутентификация на сервере черезх сервисный аккаунт
-            InputStream is = new ByteArrayInputStream(new Resources().getResource("google_credential").getBytes());
+            InputStream is = new ByteArrayInputStream(Resources.getResource("google_credential").getBytes());
             return GoogleCredentials.fromStream(is)
                     .createScoped(SCOPES);
             /*
@@ -108,7 +108,6 @@ public class CalenderGoogle {
             event.setId(eventId);
             service.events().insert(calendarID, event).execute();
             System.out.println("Новое событие");
-            // TODO добавить массовую рассылку
             TelegramBot.getInstance().sendMsg(String.format("Добавлен новый матч:%s. Дата: %s\n%s", Summary, getDateString(event.getStart()), linkMatch));
         }
         else
@@ -148,7 +147,6 @@ public class CalenderGoogle {
             {
                 service.events().patch(calendarID, eventId, event).execute();
                 System.out.println(old_event.getSummary() + msg_text);
-                // TODO добавить массовую рассылку по подписчикам
                 TelegramBot.getInstance().sendMsg(String.format("*%s.*\n %s\n\n%s", Summary, msg_text, linkMatch));
             }
 

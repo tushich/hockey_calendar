@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-// TODO: Переделать на интерфейс
-public class Resources {
-    public String getResource(String name)
+public interface Resources {
+    public static String getResource(String name)
     {
         String resource = System.getenv(name);
         if(resource == null) {

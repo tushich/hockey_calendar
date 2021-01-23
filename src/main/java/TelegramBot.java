@@ -15,22 +15,16 @@ import java.util.List;
 
 public class TelegramBot extends TelegramLongPollingBot {
 
-    // TODO Перевести пароли в безопасное хранилище
     private static String PROXY_HOST = "gilof.com" /* proxy host */;
     private static Integer PROXY_PORT = 21080 /* proxy port */;
     private static String PROXY_USER = "1835d413" /* proxy user */;
     private static String PROXY_PASSWORD = "94bc8ba7" /* proxy password */;
-
-    private static String chat_IDs[] = {"196469012", "298799539"}; // TODO Рассылать подписавшимся.
-
     private static TelegramBot instance;
     private static DefaultBotOptions botOptions = getBotOptions();
 
     private TelegramBot() {
-
         super(botOptions);
     }
-
 
     public static TelegramBot getInstance() { // #3
         if (instance == null) {        //если объект еще не создан
@@ -77,7 +71,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param s Строка, которую необходимот отправить в качестве сообщения.
      */
     public synchronized void sendMsg(String s) {
-        List<String> list = DataBase.getUsersList(new Resources().getResource("teamName"));
+        List<String> list = DataBase.getUsersList(Resources.getResource("teamName"));
         for (String chat_id : list) {
             sendMsgDirect(chat_id, s);
         }
@@ -111,9 +105,9 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
         if(message.getText().equals("/start")){
-            boolean allIsOk = DataBase.addUser(message.getChatId().toString(), new Resources().getResource("teamName"), message.getFrom().getFirstName() + " " + message.getFrom().getLastName(), message.getFrom().getUserName());
+            boolean allIsOk = DataBase.addUser(message.getChatId().toString(), Resources.getResource("teamName"), message.getFrom().getFirstName() + " " + message.getFrom().getLastName(), message.getFrom().getUserName());
             String msg;
-            if(allIsOk) msg = "Добро пожаловать в чат оповещений по ирам команды Красные медведи. " +
+            if(allIsOk) msg = "Добро пожаловать в чат оповещений по играм команды Красные медведи. " +
                     "\nПри изменениях на сайте СПБХЛ, вы автоматически получите оповещение." +
                     "\nЧтобы прекратить получать сообщения введите '/stop'" +
                     "\nКалендарь всех игр находится тут: https://calendar.google.com/calendar/u/0?cid=OW9waHNjamMwMHNzb25qNG80a2QxdGYwYThAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ";
@@ -123,10 +117,10 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
         else if(message.getText().equals("/stop"))
         {
-            boolean allIsOk = DataBase.delUser(update.getMessage().getChatId().toString(), new Resources().getResource("teamName"));
+            boolean allIsOk = DataBase.delUser(update.getMessage().getChatId().toString(), Resources.getResource("teamName"));
             String msg;
             if(allIsOk) msg = "Пока и жаль! Чтобы начать общение заново, необходимо написать '/start'";
-            else msg = "Произошла ошибка. Не удалось добавить пользователя.";
+            else msg = "Произошла ошибка. Не удалось удалить пользователя.";
                     sendMsgDirect(update.getMessage().getChatId().toString(), msg);
 
         }
@@ -155,7 +149,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public String getBotToken() {
 
-        return new Resources().getResource("token_red_bears_bot");
+        return Resources.getResource("token_red_bears_bot");
         // TODO Сделать одного бота на все команды
     }
 
