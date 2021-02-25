@@ -30,13 +30,13 @@ public interface siteSPBHL {
             Elements cols = rows.get(i).select((i == 0)? "th": "td");// разбиваем полученную строку по тегу  на столбы
             if(i == 0)
             {
-                tableCalender.addToInnerArray(i, 7, "протокол");
+                tableCalender.addToInnerArray(i, 8, "протокол");
                 tableCalender.addToInnerArray(i, cols.size(), "linkMatch");
                 tableCalender.addToInnerArray(i, cols.size() + 1, "matchID");
             }
             for (int j = 0; j < cols.size(); j++)
             {
-                if(j == 5) // колонка с матчем
+                if(j == 6) // колонка с матчем
                 {
                     Elements matchElements = cols.get(j).select("a");
                     if(matchElements.size() > 0)
@@ -57,7 +57,7 @@ public interface siteSPBHL {
                         tableCalender.addToInnerArray(i, cols.size() + 1, matchID);
                     }
                 }
-                if(j == 7)
+                if(j == 8)
                 {
                     if(i != 0) tableCalender.addToInnerArray(i, j, (cols.get(j).select("a").size()) > 0? "Есть" : "Нет");
                 }

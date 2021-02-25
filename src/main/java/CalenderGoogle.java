@@ -108,7 +108,7 @@ public class CalenderGoogle {
             event.setId(eventId);
             service.events().insert(calendarID, event).execute();
             System.out.println("Новое событие");
-            TelegramBot.getInstance().sendMsg(String.format("Добавлен новый матч:%s. Дата: %s\n%s", Summary, getDateString(event.getStart()), linkMatch));
+            TelegramBot.getInstance().sendMsg(String.format("Добавлен новый матч:\n*%s*. Дата: %s\n%s", Summary, getDateString(event.getStart()), linkMatch));
         }
         else
         {

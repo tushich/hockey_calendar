@@ -84,6 +84,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param s Строка, которую необходимот отправить в качестве сообщения.
      */
     public synchronized void sendMsgDirect(String chatId, String s) {
+
             SendMessage sendMessage = new SendMessage();
             sendMessage.enableMarkdown(true);
             sendMessage.setChatId(chatId);
