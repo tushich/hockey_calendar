@@ -20,7 +20,9 @@ public class TelegramBot extends TelegramLongPollingBot {
     private static String PROXY_USER = "1835d413" /* proxy user */;
     private static String PROXY_PASSWORD = "94bc8ba7" /* proxy password */;
     private static TelegramBot instance;
-    private static DefaultBotOptions botOptions = getBotOptions();
+    //временно заменим private static DefaultBotOptions botOptions = getBotOptions();
+
+private static DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
     private TelegramBot() {
         super(botOptions);
@@ -46,7 +48,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     private static DefaultBotOptions getBotOptions()
     {
         // Create the Authenticator that will return auth's parameters for proxy authentication
-        Authenticator.setDefault(new Authenticator() {
+        //TODO сделать прокси прараметрами хероку
+Authenticator.setDefault(new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(PROXY_USER, PROXY_PASSWORD.toCharArray());
