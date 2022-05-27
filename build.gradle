@@ -20,6 +20,7 @@ compileTestJava.options.encoding = 'UTF-8'
         compile 'com.google.apis:google-api-services-calendar:v3-rev411-1.25.0'
         compile 'org.jsoup:jsoup:1.12.1'
         compile 'org.postgresql:postgresql:42.2.1'
+        compile 'org.slf4j:slf4j-simple:1.7.25'
         compile group: 'org.telegram', name: 'telegrambots', version: '4.6'  // https://mvnrepository.com/artifact/org.telegram/telegrambots
     }
 
