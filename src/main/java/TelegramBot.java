@@ -20,9 +20,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private static String PROXY_USER = "1835d413" /* proxy user */;
     private static String PROXY_PASSWORD = "94bc8ba7" /* proxy password */;
     private static TelegramBot instance;
-    //временно заменим private static DefaultBotOptions botOptions = getBotOptions();
-
-private static DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
+    private static DefaultBotOptions botOptions = getBotOptions();
 
     private TelegramBot() {
         super(botOptions);
@@ -49,7 +47,7 @@ private static DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotO
     {
         // Create the Authenticator that will return auth's parameters for proxy authentication
         //TODO сделать прокси прараметрами хероку
-Authenticator.setDefault(new Authenticator() {
+    Authenticator.setDefault(new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(PROXY_USER, PROXY_PASSWORD.toCharArray());
@@ -61,10 +59,10 @@ Authenticator.setDefault(new Authenticator() {
         // Set up Http proxy
         DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
-        botOptions.setProxyHost(PROXY_HOST);
-        botOptions.setProxyPort(PROXY_PORT);
+        //botOptions.setProxyHost(PROXY_HOST);
+        //botOptions.setProxyPort(PROXY_PORT);
         // Select proxy type: [HTTP|SOCKS4|SOCKS5] (default: NO_PROXY)
-        botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
+        //botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
 
         return botOptions;
     }
