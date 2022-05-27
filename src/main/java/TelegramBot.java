@@ -72,7 +72,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param s Строка, которую необходимот отправить в качестве сообщения.
      */
     public synchronized void sendMsg(String s) {
-        List<String> list = DataBase.getUsersList(Resources.getResource("teamName"));
+        List<String> list = DataBase.getUsersList(Resources.getResource("teamName")); // TODO Если тестовый контур, то отправлять только себе в чат.
         for (String chat_id : list) {
             sendMsgDirect(chat_id, s);
         }

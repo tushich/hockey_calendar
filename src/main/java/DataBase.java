@@ -30,8 +30,6 @@ public interface DataBase {
             connection.close();
         } catch (SQLException | URISyntaxException e) {
             e.printStackTrace();
-
-            return list;
         }
         return list;
     }
