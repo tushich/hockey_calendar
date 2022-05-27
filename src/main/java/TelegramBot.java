@@ -62,7 +62,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         botOptions.setProxyHost(PROXY_HOST);
         botOptions.setProxyPort(PROXY_PORT);
         // Select proxy type: [HTTP|SOCKS4|SOCKS5] (default: NO_PROXY)
-        botOptions.setProxyType(DefaultBotOptions.ProxyType.NO_PROXY); // было SOCKS5
+        botOptions.setProxyType(DefaultBotOptions.ProxyType.NO_PROXY); // Чтобы был прокси поменяй на SOCKS5
 
         return botOptions;
     }
@@ -76,7 +76,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         for (String chat_id : list) {
             sendMsgDirect(chat_id, s);
         }
-
     }
 
     /**
@@ -128,7 +127,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
         else
         {
-
             sendMsgDirect(update.getMessage().getChatId().toString(), "Ошибка: Неизвестная команда чата");
         }
 

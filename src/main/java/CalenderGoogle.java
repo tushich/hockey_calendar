@@ -51,11 +51,6 @@ public class CalenderGoogle {
             InputStream is = new ByteArrayInputStream(Resources.getResource("google_credential").getBytes());
             return GoogleCredentials.fromStream(is)
                     .createScoped(SCOPES);
-            /*
-            return GoogleCredentials.fromStream(new FileInputStream(SERVICE_ACCOUNT_FILE_PATH))
-                    .createScoped(SCOPES);
-                    */
-
     }
 
     public Event getEvent(String eventId) throws IOException {
