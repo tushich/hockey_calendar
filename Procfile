@@ -1,1 +1,1 @@
-web: java -Dserver.port=55563 $JAVA_OPTS -jar build/libs/stern_calender-1.0.jar
+web: java -Dserver.port=$PORT $JAVA_OPTS -jar build/libs/stern_calender-1.0.jar
