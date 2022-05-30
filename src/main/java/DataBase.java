@@ -45,7 +45,6 @@ public interface DataBase {
     static boolean createTable(){
         return executeSQLUpdate("CREATE TABLE users(userId varchar(40), team varchar(40), FIO varchar(40), telegramLogin varchar(40), PRIMARY KEY(userId))");
     }
-    //
 
     static boolean executeSQLUpdate(String request){
         try {

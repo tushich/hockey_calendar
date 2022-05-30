@@ -8,7 +8,8 @@ public interface siteSPBHL {
 
     static TwoDimentionalArrayList<String> getTable(String url)
     {
-        TwoDimentionalArrayList<String> tableCalender = new TwoDimentionalArrayList<>(); // TODO переделать на ассоциативный массив(hashmap вроде), чтобы обращаться по имени колонки и убрать первую строку с именами колонки
+        TwoDimentionalArrayList<String> tableCalender = new TwoDimentionalArrayList<>();
+        // TODO переделать на ассоциативный массив(hashmap вроде), чтобы обращаться по имени колонки и убрать первую строку с именами колонки
 
         Document doc;
 
