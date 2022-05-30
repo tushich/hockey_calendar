@@ -24,6 +24,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private TelegramBot() {
         super(botOptions);
+
     }
 
     public static TelegramBot getInstance() { // #3
@@ -38,6 +39,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         TelegramBotsApi botsApi = new TelegramBotsApi();
         try {
             botsApi.registerBot(this);
+            // TODO 0. Починить. Бот мешает сам себе получать апдейты от телеги. ВОзможно перейти на вебхуки
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
         }
@@ -72,7 +74,8 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param s Строка, которую необходимот отправить в качестве сообщения.
      */
     public synchronized void sendMsg(String s) {
-        List<String> list = DataBase.getUsersList(Resources.getResource("teamName")); // TODO Если тестовый контур, то отправлять только себе в чат.
+        List<String> list = DataBase.getUsersList(Resources.getResource("teamName"));
+        // TODO 0. Если тестовый контур, то отправлять только себе в чат.
         for (String chat_id : list) {
             sendMsgDirect(chat_id, s);
         }
