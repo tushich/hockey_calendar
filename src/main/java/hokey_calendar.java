@@ -3,7 +3,7 @@ import com.google.api.client.util.DateTime;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-public class stern_calender {
+public class hokey_calendar {
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
 
