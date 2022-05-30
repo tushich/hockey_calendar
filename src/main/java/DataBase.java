@@ -35,27 +35,23 @@ public interface DataBase {
     }
 
     static boolean addUser(String userID, String team, String FIO, String telegramLogin){
-        try {
-            Connection connection = getConnection();
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(String.format("INSERT INTO users(userID, team, FIO, telegramLogin) values('%s','%s','%s','%s')", userID, team, FIO, telegramLogin));
-                    //"CREATE TABLE users(userId varchar(40), team varchar(40), FIO varchar(40), telegramLogin varchar(40), PRIMARY KEY(userId))");
-
-            connection.close();
-        } catch (SQLException | URISyntaxException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+        return executeSQLUpdate(String.format("INSERT INTO users(userID, team, FIO, telegramLogin) values('%s','%s','%s','%s')", userID, team, FIO, telegramLogin));
     }
 
     static boolean delUser(String userID, String team){
+        return executeSQLUpdate("DELETE FROM users WHERE userID='" + userID + "' and team='" + team + "'");
+    }
 
+    static boolean createTable(){
+        return executeSQLUpdate("CREATE TABLE users(userId varchar(40), team varchar(40), FIO varchar(40), telegramLogin varchar(40), PRIMARY KEY(userId))");
+    }
+    //
+
+    static boolean executeSQLUpdate(String request){
         try {
             Connection connection = getConnection();
             Statement statement = connection.createStatement();
-            statement.executeUpdate(
-                    "DELETE FROM users WHERE userID='" + userID + "' and team='" + team + "'");
+            statement.executeUpdate(request);
             connection.close();
         } catch (SQLException | URISyntaxException e) {
             e.printStackTrace();
