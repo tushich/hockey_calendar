@@ -15,16 +15,18 @@ import java.util.List;
 
 public class TelegramBot extends TelegramLongPollingBot {
 
-    private static String PROXY_HOST = "gilof.com" /* proxy host */;
-    private static Integer PROXY_PORT = 21080 /* proxy port */;
-    private static String PROXY_USER = "1835d413" /* proxy user */;
-    private static String PROXY_PASSWORD = "94bc8ba7" /* proxy password */;
+    private static final String PROXY_HOST = Resources.getResource("PROXY_HOST");
+    private static final Integer PROXY_PORT = Integer.getInteger(Resources.getResource("PROXY_PORT"));
+    private static final String PROXY_USER = Resources.getResource("PROXY_USER");
+    private static final String PROXY_PASSWORD = Resources.getResource("PROXY_PASSWORD");
+    private static final Boolean use_proxy = Resources.getResource("use_proxy") != null
+            & Boolean.getBoolean(Resources.getResource("use_proxy"));
     private static TelegramBot instance;
-    private static DefaultBotOptions botOptions = getBotOptions();
-
+    private static final DefaultBotOptions botOptions = getBotOptions();
+    private static final String location = Resources.getResource("location");
+    private static final String admin_chat_id = Resources.getResource("tushich_id_chat");
     private TelegramBot() {
         super(botOptions);
-
     }
 
     public static TelegramBot getInstance() { // #3
@@ -47,25 +49,21 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private static DefaultBotOptions getBotOptions()
     {
-        // Create the Authenticator that will return auth's parameters for proxy authentication
-        //TODO сделать прокси прараметрами хероку
-    Authenticator.setDefault(new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(PROXY_USER, PROXY_PASSWORD.toCharArray());
-            }
-        });
 
-        ApiContextInitializer.init();
-
-        // Set up Http proxy
         DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
-
-        botOptions.setProxyHost(PROXY_HOST);
-        botOptions.setProxyPort(PROXY_PORT);
-        // Select proxy type: [HTTP|SOCKS4|SOCKS5] (default: NO_PROXY)
-        botOptions.setProxyType(DefaultBotOptions.ProxyType.NO_PROXY); // Чтобы был прокси поменяй на SOCKS5
-
+        if(use_proxy) {
+            Authenticator.setDefault(new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(PROXY_USER, PROXY_PASSWORD.toCharArray());
+                }
+            });
+            ApiContextInitializer.init();
+            botOptions.setProxyHost(PROXY_HOST);
+            botOptions.setProxyPort(PROXY_PORT);
+            // Select proxy type: [HTTP|SOCKS4|SOCKS5] (default: NO_PROXY)
+            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
+        }
         return botOptions;
     }
 
@@ -74,11 +72,18 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param s Строка, которую необходимот отправить в качестве сообщения.
      */
     public synchronized void sendMsg(String s) {
-        List<String> list = DataBase.getUsersList(Resources.getResource("teamName"));
-        // TODO 0. Если тестовый контур, то отправлять только себе в чат.
-        for (String chat_id : list) {
-            sendMsgDirect(chat_id, s);
+
+        if(location.equals("prod")) {
+            List<String> list = DataBase.getUsersList(Resources.getResource("teamName"));
+            for (String chat_id : list) {
+                sendMsgDirect(chat_id, s);
+            }
         }
+        else // если шлёт в тесте, то отправялть админу 1 раз
+        {
+            sendMsgDirect(admin_chat_id, s);
+        }
+
     }
 
     /**
@@ -87,16 +92,19 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param s Строка, которую необходимот отправить в качестве сообщения.
      */
     public synchronized void sendMsgDirect(String chatId, String s) {
-
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.enableMarkdown(true);
-            sendMessage.setChatId(chatId);
-            sendMessage.setText(s);
-            try {
-                execute(sendMessage);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+        if(location.equals("test"))
+        {
+            chatId = admin_chat_id;
+        }
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.enableMarkdown(true);
+        sendMessage.setChatId(chatId);
+        sendMessage.setText(s);
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -111,8 +119,9 @@ public class TelegramBot extends TelegramLongPollingBot {
         if(message.getText().equals("/start")){
             boolean allIsOk = DataBase.addUser(message.getChatId().toString(), Resources.getResource("teamName"), message.getFrom().getFirstName() + " " + message.getFrom().getLastName(), message.getFrom().getUserName());
             String msg;
-            if(allIsOk) msg = "Добро пожаловать в чат оповещений по играм команды Красные медведи. " +
-                    "\nПри изменениях на сайте СПБХЛ, вы автоматически получите оповещение." +
+            if(allIsOk) msg = "Добро пожаловать в чат оповещений по играм команд c сайтов СПБХЛ и ФХСПб\n" +
+                    "https://www.fhspb.ru/" + "https://spbhl.ru/\n" +
+                    "\nПри изменениях на сайтах СПБХЛ, вы автоматически получите оповещение." +
                     "\nЧтобы прекратить получать сообщения введите '/stop'" +
                     "\nКалендарь всех игр находится тут: https://calendar.google.com/calendar/u/0?cid=OW9waHNjamMwMHNzb25qNG80a2QxdGYwYThAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ";
             else msg = "Произошла ошибка. Не удалось добавить пользователя.";
@@ -125,7 +134,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             String msg;
             if(allIsOk) msg = "Пока и жаль! Чтобы начать общение заново, необходимо написать '/start'";
             else msg = "Произошла ошибка. Не удалось удалить пользователя.";
-                    sendMsgDirect(update.getMessage().getChatId().toString(), msg);
+            sendMsgDirect(update.getMessage().getChatId().toString(), msg);
 
         }
         else
