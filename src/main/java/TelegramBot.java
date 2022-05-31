@@ -83,7 +83,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         {
             sendMsgDirect(admin_chat_id, s);
         }
-
     }
 
     /**
@@ -105,9 +104,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
-
     }
-
 
     /**
      * Метод для приема сообщений.
@@ -162,7 +159,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     public String getBotToken() {
 
         return Resources.getResource("token_red_bears_bot");
-        // TODO Сделать одного бота на все команды
+        // TODO 0 Сделать нового бота. Одного для всех компнд
     }
 
 }

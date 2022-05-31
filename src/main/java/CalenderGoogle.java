@@ -26,7 +26,8 @@ public class CalenderGoogle {
     private static final String APPLICATION_NAME = Resources.getResource("APPLICATION_NAME");
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static Calendar service = null;
-    public String calendarID = Resources.getResource("calendarID"); // TODO Сделать командный календарь для каждой команды
+    // TODO Сделать командный календарь для каждой команды
+    public String calendarID = Resources.getResource("calendarID");
     // Календарь штерна "ieesvcpisvro03mobsrnv54k5o@group.calendar.google.com";
 
     /**
@@ -136,7 +137,8 @@ public class CalenderGoogle {
             if(!old_event.getSummary().equals(event.getSummary()))
             {
                 needToUpdate = true;
-                msg_text = String.format("%s\nИзменилось описание. \n%s -> \n%s ", msg_text, old_event.getSummary(), event.getSummary()); // TODO вытащить стадион, в параметр. Т.к. может быть изменен
+                // TODO вытащить стадион, в параметр. Т.к. может быть изменен
+                msg_text = String.format("%s\nИзменилось описание. \n%s -> \n%s ", msg_text, old_event.getSummary(), event.getSummary());
             }
             if(needToUpdate)
             {

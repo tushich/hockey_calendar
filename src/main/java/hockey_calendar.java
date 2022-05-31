@@ -11,7 +11,7 @@ public class hockey_calendar {
 
         System.setProperty("java.net.useSystemProxies", "true");
 
-        // TODO 2. СЕйчас команды только 2. Добавляем всех в один массив. Надо сделать красивше.
+        // TODO 2. Сейчас команды только 2. Добавляем всех в один массив. Надо сделать красивше.
         String[] teamIDArray = new String[2];
         teamIDArray[0] = Resources.getResource("teamIdSpbhl");
         teamIDArray[1] = Resources.getResource("teamIdSpbhl_2");
