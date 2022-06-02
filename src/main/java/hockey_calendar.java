@@ -2,7 +2,6 @@ import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,14 +24,32 @@ public class hockey_calendar {
         CalenderGoogle calender = new CalenderGoogle();
         for (String teamID : teamIDArray) {
 
-            List<Map<String,String>> tableCalender = siteSPBHL.getMatchTable(String.format("http://spbhl.ru/Schedule?TeamID=%s", teamID));
+            List<Match> tableCalender = siteSPBHL.getMatchTable(String.format("http://spbhl.ru/Schedule?TeamID=%s", teamID));
 
-            for (int i = 0; i < tableCalender.size(); i++) {
-                String summary = "";
+            for (Match match_from_site : tableCalender) {
+
+
+
+                Match match_from_dataBase = DataBase.getMatch(match_from_site.getMatchID());
+                if(match_from_dataBase.isEmpty()) // Если пустой, то создадим овый матч
+                {
+                    DataBase.addMatch(match_from_site);
+                    // оповестить что создан матч
+                }
+                else // Матч уже есть в базеДанных, значит надо найти различия. Обновить. и Сообщить об обновлении.
+                {
+
+                }
+
+
+
+
+                /*String summary = "";
                 DateTime startDateTime = new DateTime(0);
                 DateTime endDateTime = new DateTime(0);
+
                 try {
-                    summary = tableCalender.get(i).get("teams") + "\nСтадион:" + tableCalender.get(i).get("Стадион") + " Турнир:" + tableCalender.get(i).get("Турнир");
+                    summary = tableCalender.get(i).get("teams") + "\nСтадион:" + tableCalender.get(i).get("Stadium") + " Турнир:" + tableCalender.get(i).get("Tournament");
                     String id = tableCalender.get(i).get("matchID");
                     try { // в поле с датой может быть что угодно. Например слово "Перенос"
                         // TODO Перенести фаормирвоание дат в класс siteSPBHL.java
@@ -47,13 +64,15 @@ public class hockey_calendar {
                         //Ничего не делаем. Отправляем пустую дату.
                     }
 
-                    String protokolExist = tableCalender.get(i).get("startTime") ;
+                    String protokolExist = tableCalender.get(i).get("protokolExist") ;
                     String linkMatch =  tableCalender.get(i).get("linkMatch") ;
                     String count = tableCalender.get(i).get("count") ;
                     calender.updateEvent(id, summary, startDateTime, endDateTime, linkMatch, protokolExist, count);
+
                 } catch (Exception e) {
                     System.out.format("\nНе удалось обработать строку %d\n Summary:%s\n Ошибка:%s", i, summary,  e.getMessage());
                 }
+                 */
             }
         }
     }
