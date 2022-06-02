@@ -25,7 +25,7 @@ public class hockey_calendar {
         CalenderGoogle calender = new CalenderGoogle();
         for (String teamID : teamIDArray) {
 
-            List<Map<String,String>> tableCalender = siteSPBHL.getHashTable(String.format("http://spbhl.ru/Schedule?TeamID=%s", teamID));
+            List<Map<String,String>> tableCalender = siteSPBHL.getMatchTable(String.format("http://spbhl.ru/Schedule?TeamID=%s", teamID));
 
             for (int i = 0; i < tableCalender.size(); i++) {
                 String summary = "";

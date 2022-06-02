@@ -1,7 +1,6 @@
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,9 +9,9 @@ import java.util.Map;
 
 public interface siteSPBHL {
 
-    static List<Map<String,String>> getHashTable(String url)
+    static List<Map<String,String>> getMatchTable(String url)
     {
-        List<Map<String,String>> tableCalender = new ArrayList<>();
+        List<Map<String,String>> matchTable = new ArrayList<>();
 
         Document doc;
 
@@ -24,7 +23,7 @@ public interface siteSPBHL {
         {
             e.printStackTrace();
             System.out.print("Ошибка чтения страницы HTML");
-            return tableCalender;
+            return matchTable;
         }
 
         Elements rows = doc.getElementById("MatchGridView").select("tr");
@@ -45,9 +44,8 @@ public interface siteSPBHL {
         for (int i = 1; i < rows.size(); i++)
         {
             Map<String,String> rowTable = new HashMap<>();
-
+            // TODO Переделать строку таблицы матчей с мапы на свой отдельный объект Match
             Elements cols = rows.get(i).select((i == 0)? "th": "td");// разбиваем полученную строку по тегу на столбы
-
 
             for (int j = 0; j < cols.size(); j++)
             {
@@ -82,9 +80,9 @@ public interface siteSPBHL {
                 }
             }
 
-            tableCalender.add(rowTable);
+            matchTable.add(rowTable);
 
         }
-        return tableCalender;
+        return matchTable;
     }
 }
