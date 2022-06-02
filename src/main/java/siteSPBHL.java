@@ -3,13 +3,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public interface siteSPBHL {
 
-    static TwoDimentionalArrayList<String> getTable(String url)
+    static List<Map<String,String>> getHashTable(String url)
     {
-        TwoDimentionalArrayList<String> tableCalender = new TwoDimentionalArrayList<>();
-        // TODO 0 переделать на ассоциативный массив(hashmap вроде), чтобы обращаться по имени колонки и убрать первую строку с именами колонки
+        List<Map<String,String>> tableCalender = new ArrayList<>();
 
         Document doc;
 
@@ -25,17 +28,27 @@ public interface siteSPBHL {
         }
 
         Elements rows = doc.getElementById("MatchGridView").select("tr");
+        String[] colNames = new String[]
+                    {   "Турнир",
+                        "Тур",
+                        "Номер",
+                        "startDate",
+                        "startTime",
+                        "Стадион",
+                        "teams",
+                        "count",
+                        "protokolExist",
+                        "linkMatch",
+                        "matchID"};
 
-        for (int i = 0; i < rows.size(); i++)
+
+        for (int i = 1; i < rows.size(); i++)
         {
+            Map<String,String> rowTable = new HashMap<>();
 
-            Elements cols = rows.get(i).select((i == 0)? "th": "td");// разбиваем полученную строку по тегу  на столбы
-            if(i == 0)
-            {
-                tableCalender.addToInnerArray(i, 8, "протокол");
-                tableCalender.addToInnerArray(i, cols.size(), "linkMatch");
-                tableCalender.addToInnerArray(i, cols.size() + 1, "matchID");
-            }
+            Elements cols = rows.get(i).select((i == 0)? "th": "td");// разбиваем полученную строку по тегу на столбы
+
+
             for (int j = 0; j < cols.size(); j++)
             {
                 if(j == 6) // колонка с матчем
@@ -47,27 +60,30 @@ public interface siteSPBHL {
                         String matchID = matchElements.get(0).attributes().toString();
 
                         // Добавим ссылку на матч
-                        tableCalender.addToInnerArray(i, cols.size(), "https://spbhl.ru/" + matchID.replace(" href=\"", "")
-                                                                                                          .replace("\"", "")
-                                                                                                          .replace("&amp;", "&"));
+                        rowTable.put("linkMatch", "https://spbhl.ru/" + matchID.replace(" href=\"", "")
+                                .replace("\"", "")
+                                .replace("&amp;", "&"));
 
                         matchID = matchID.replace(" href=\"Match.aspx?TournamentID=", "");
                         matchID = matchID.replace("MatchID=", "");
                         matchID = matchID.replace("\"", "");
                         matchID = matchID.replace("&amp;", "v");
 
-                        tableCalender.addToInnerArray(i, cols.size() + 1, matchID);
+                        rowTable.put("matchID", matchID);
                     }
                 }
                 if(j == 8)
                 {
-                    if(i != 0) tableCalender.addToInnerArray(i, j, (cols.get(j).select("a").size()) > 0? "Есть" : "Нет");
+                    rowTable.put("protokolExist", (cols.get(j).select("a").size()) > 0? "Есть" : "Нет");
                 }
                 else
                 {
-                    tableCalender.addToInnerArray(i, j, cols.get(j).text());
+                    rowTable.put(colNames[j], cols.get(j).text());
                 }
             }
+
+            tableCalender.add(rowTable);
+
         }
         return tableCalender;
     }

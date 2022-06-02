@@ -1,1 +1,1 @@
-worker: java $JAVA_OPTS -jar build/libs/stern_calender-1.0.jar
+worker: java $JAVA_OPTS -jar build/libs/hockey_calender-1.0.jar

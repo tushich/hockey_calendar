@@ -2,6 +2,9 @@ import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class hockey_calendar {
 
@@ -9,7 +12,7 @@ public class hockey_calendar {
 
         TelegramBot.getInstance().startListen();
 
-        System.setProperty("java.net.useSystemProxies", "true");
+        // System.setProperty("java.net.useSystemProxies", "true");
 
         // TODO 2. Сейчас команды только 2. Добавляем всех в один массив. Надо сделать красивше.
         String[] teamIDArray = new String[2];
@@ -18,24 +21,23 @@ public class hockey_calendar {
 
         // TODO 1. Перевести хранение данных событий в базу данных из календаря.
         // TODO 3. СРавнивать список матчей календарь - сайт и в обратном порядке. Если в матче поменяли нашу команду, то бот не удаляет матч.
-        // TODO Сделать приявязку полей с сайта по наименованию колонок, а не по ID
         // TODO 4. Сделать отправку ошибок в чат Максиму Т
         CalenderGoogle calender = new CalenderGoogle();
         for (String teamID : teamIDArray) {
 
-            TwoDimentionalArrayList<String> tableCalender = siteSPBHL.getTable(String.format("http://spbhl.ru/Schedule?TeamID=%s", teamID));
+            List<Map<String,String>> tableCalender = siteSPBHL.getHashTable(String.format("http://spbhl.ru/Schedule?TeamID=%s", teamID));
 
-            for (int i = 1; i < tableCalender.size(); i++) {
+            for (int i = 0; i < tableCalender.size(); i++) {
                 String summary = "";
                 DateTime startDateTime = new DateTime(0);
                 DateTime endDateTime = new DateTime(0);
                 try {
-                    summary = tableCalender.getCellValue(i, 6) + "\nСтадион:" + tableCalender.getCellValue(i, 5) + " Турнир:" + tableCalender.getCellValue(i, 0);
-                    String id = (String) tableCalender.getCellValue(i, 10);
+                    summary = tableCalender.get(i).get("teams") + "\nСтадион:" + tableCalender.get(i).get("Стадион") + " Турнир:" + tableCalender.get(i).get("Турнир");
+                    String id = tableCalender.get(i).get("matchID");
                     try { // в поле с датой может быть что угодно. Например слово "Перенос"
                         // TODO Перенести фаормирвоание дат в класс siteSPBHL.java
-                        String startDate = (String) tableCalender.getCellValue(i, 3);  // формат 21:00:00
-                        String startTime = tableCalender.getCellValue(i, 4) + ":00";
+                        String startDate = tableCalender.get(i).get("startDate");  // формат 21:00:00
+                        String startTime = tableCalender.get(i).get("startTime") + ":00";
                         startDate = startDate.substring(9, 13) + "-" + startDate.substring(6, 8) + "-" + startDate.substring(3, 5);
                         startDateTime = new DateTime(startDate + "T" + startTime + "+03:00");
                         endDateTime = new DateTime(startDateTime.getValue() + (60000 * 75));
@@ -45,9 +47,9 @@ public class hockey_calendar {
                         //Ничего не делаем. Отправляем пустую дату.
                     }
 
-                    String protokolExist = (String) tableCalender.getCellValue(i, 8);
-                    String linkMatch =  (String) tableCalender.getCellValue(i, 9);
-                    String count = (String) tableCalender.getCellValue(i, 7);
+                    String protokolExist = tableCalender.get(i).get("startTime") ;
+                    String linkMatch =  tableCalender.get(i).get("linkMatch") ;
+                    String count = tableCalender.get(i).get("count") ;
                     calender.updateEvent(id, summary, startDateTime, endDateTime, linkMatch, protokolExist, count);
                 } catch (Exception e) {
                     System.out.format("\nНе удалось обработать строку %d\n Summary:%s\n Ошибка:%s", i, summary,  e.getMessage());

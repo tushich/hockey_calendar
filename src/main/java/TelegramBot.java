@@ -1,33 +1,18 @@
-import org.telegram.telegrambots.ApiContextInitializer;
-import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.ApiContext;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.util.List;
 
 public class TelegramBot extends TelegramLongPollingBot {
 
-    private static final String PROXY_HOST = Resources.getResource("PROXY_HOST");
-    private static final Integer PROXY_PORT = Integer.getInteger(Resources.getResource("PROXY_PORT"));
-    private static final String PROXY_USER = Resources.getResource("PROXY_USER");
-    private static final String PROXY_PASSWORD = Resources.getResource("PROXY_PASSWORD");
-    private static final Boolean use_proxy = Resources.getResource("use_proxy") != null
-            & Boolean.getBoolean(Resources.getResource("use_proxy"));
     private static TelegramBot instance;
-    private static final DefaultBotOptions botOptions = getBotOptions();
     private static final String location = Resources.getResource("location");
     private static final String admin_chat_id = Resources.getResource("tushich_id_chat");
-    private TelegramBot() {
-        super(botOptions);
-    }
 
     public static TelegramBot getInstance() { // #3
         if (instance == null) {        //если объект еще не создан
@@ -38,33 +23,12 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     public void startListen(){
         //Запускает бота на прослушку получаемых сообщений
-        TelegramBotsApi botsApi = new TelegramBotsApi();
         try {
+            TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(this);
-            // TODO 0. Починить. Бот мешает сам себе получать апдейты от телеги. ВОзможно перейти на вебхуки
-        } catch (TelegramApiRequestException e) {
-            e.printStackTrace();
+        } catch (TelegramApiException e) {
+            System.out.format("\nОшибка подключения телеграм:%s", e.getMessage());
         }
-    }
-
-    private static DefaultBotOptions getBotOptions()
-    {
-
-        DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
-        if(use_proxy) {
-            Authenticator.setDefault(new Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(PROXY_USER, PROXY_PASSWORD.toCharArray());
-                }
-            });
-            ApiContextInitializer.init();
-            botOptions.setProxyHost(PROXY_HOST);
-            botOptions.setProxyPort(PROXY_PORT);
-            // Select proxy type: [HTTP|SOCKS4|SOCKS5] (default: NO_PROXY)
-            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
-        }
-        return botOptions;
     }
 
     /**
@@ -159,7 +123,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     public String getBotToken() {
 
         return Resources.getResource("token_red_bears_bot");
-        // TODO 0 Сделать нового бота. Одного для всех компнд
+        // TODO 0 Сделать нового бота. Одного для всех команд + Новый токен для него
     }
 
 }

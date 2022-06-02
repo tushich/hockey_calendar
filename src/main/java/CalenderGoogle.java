@@ -1,7 +1,7 @@
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
@@ -24,7 +24,7 @@ import java.util.List;
 
 public class CalenderGoogle {
     private static final String APPLICATION_NAME = Resources.getResource("APPLICATION_NAME");
-    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static Calendar service = null;
     // TODO Сделать командный календарь для каждой команды
     public String calendarID = Resources.getResource("calendarID");
