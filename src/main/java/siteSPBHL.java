@@ -55,7 +55,11 @@ public interface siteSPBHL {
                         match.setMatchID(matchID);
                     }
                 }
-                if(j == 8)
+                if(j == 3 || j == 4) // дату собираем из 2х строк
+                {
+                    match.setStartDateTime(cols.get(3).text(), cols.get(4).text());
+                }
+                else if(j == 8)
                 {
                     match.setProtokolExist((cols.get(j).select("a").size()) > 0? "Есть" : "Нет");
                 }

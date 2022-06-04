@@ -58,22 +58,40 @@ public class Match {
 
     public boolean isEmpty()
     {
-        return matchID.isEmpty();
+        return matchID==null || matchID.isEmpty();
     }
     public void setByColumnId(Integer colId, String value) {
         switch (colId)
         {
-            case(0): setTournament(value);
-            case(1): setRound(value);
-            case(2): setNumber(value);
+            case(0):
+                setTournament(value);
+                break;
+            case(1):
+                setRound(value);
+                break;
+            case(2):
+                setNumber(value);
+                break;
             //case(3): setStartDate(value); дату устанавлиаем через отдельный сеттер
             //case(4): setStartTime(value);
-            case(5): setStadium(value);
-            case(6): setTeams(value);
-            case(7): setCount(value);
-            case(8): setProtokolExist(value);
-            case(9): setLinkMatch(value);
-            case(10): setMatchID(value);
+            case(5):
+                setStadium(value);
+                break;
+            case(6):
+                setTeams(value);
+                break;
+            case(7):
+                setCount(value);
+                break;
+            case(8):
+                setProtokolExist(value);
+                break;
+            case(9):
+                setLinkMatch(value);
+                break;
+            case(10):
+                setMatchID(value);
+                break;
 
         }
 

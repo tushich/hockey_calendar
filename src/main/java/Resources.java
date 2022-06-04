@@ -21,6 +21,7 @@ public interface Resources {
                 e.printStackTrace();
             }
         }
+        if(resource == null || resource.isEmpty()) throw new NullPointerException("Не найден ресурс с именем " + name);
         return resource;
     }
 }

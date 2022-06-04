@@ -58,7 +58,8 @@ public interface DataBase {
                        i = 4;
                        continue;
                    }
-                   match.setByColumnId(i, result1.getString(match.colNames[i]));
+                   else
+                       match.setByColumnId(i, result1.getString(match.colNames[i]));
                }
             }
             connection.close();

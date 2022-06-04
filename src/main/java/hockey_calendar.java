@@ -14,20 +14,22 @@ public class hockey_calendar {
 
         // TODO 2. Сейчас команды только 2. Добавляем всех в один массив. Надо сделать красивше.
         String[] teamIDArray = new String[2];
-        teamIDArray[0] = Resources.getResource("teamIdSpbhl");
-        teamIDArray[1] = Resources.getResource("teamIdSpbhl_2");
+        teamIDArray[0] = Resources.getResource("teamIdSpbhl_red_bears_main");
+        teamIDArray[1] = Resources.getResource("teamIdSpbhl_red_bears_farm");
 
         // TODO 1. Перевести хранение данных событий в базу данных из календаря.
         // TODO 3. СРавнивать список матчей календарь - сайт и в обратном порядке. Если в матче поменяли нашу команду, то бот не удаляет матч.
         // TODO 4. Сделать отправку ошибок в чат Максиму Т
-        CalenderGoogle calender = new CalenderGoogle();
+        // CalenderGoogle calender = new CalenderGoogle();
+        // TODO подумать как создавать календарь для разных команд
+
         for (String teamID : teamIDArray) {
 
-            List<Match> tableCalender = siteSPBHL.getMatchTable(String.format("http://spbhl.ru/Schedule?TeamID=%s", teamID));
+            List<Match> matchTable = siteSPBHL.getMatchTable(String.format("http://spbhl.ru/Schedule?TeamID=%s", teamID));
 
-            for (Match match_from_site : tableCalender) {
+            for (Match match_from_site : matchTable) {
 
-                String summary = match_from_site.getTeams() + "\nСтадион:" + match_from_site.getStadium() + " Турнир:" + match_from_site.getTournament();
+                String summary = match_from_site.getTeams() + "\nСтадион:" + match_from_site.getStadium() + "\nТурнир:" + match_from_site.getTournament();
 
                 try {
                     Match match_from_dataBase = DataBase.getMatch(match_from_site.getMatchID());
