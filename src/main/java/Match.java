@@ -30,18 +30,28 @@ public class Match {
         String dif = "";
         if(tournament.equals(another_match.getTournament()))
         {
-            dif.concat(String.format("\nИзменился турнир:\n%s -> \n%s", tournament, another_match.getTournament()));
+            dif = dif.concat(String.format("\nИзменился турнир:\n%s -> \n%s", tournament, another_match.getTournament()));
         }
         if(round.equals(another_match.getRound()))
         {
-            dif.concat(String.format("\nИзменился раунд:\n%s -> \n%s", round, another_match.getRound()));
+            dif = dif.concat(String.format("\nИзменился раунд:\n%s -> \n%s", round, another_match.getRound()));
         }
-        if(round.equals(another_match.getRound()))
+        if(startDateTime.equals(another_match.getStartDateTime()))
         {
-            dif.concat(String.format("\nИзменился раунд:\n%s -> \n%s", round, another_match.getRound()));
+            dif = dif.concat(String.format("\nИзменилась дата и время:\n%t -> \n%t", startDateTime, another_match.getStartDateTime()));
         }
-
-
+        if(stadium.equals(another_match.getStadium()))
+        {
+            dif = dif.concat(String.format("\nИзменился стадион:\n%s -> \n%s", stadium, another_match.getStadium()));
+        }
+        if(protokolExist.equals(another_match.getProtokolExist()))
+        {
+            dif = dif.concat("\nДобавлен протокол");
+        }
+        if(count.equals(another_match.getCount()))
+        {
+            dif = dif.concat("\nОбновлен счет" + count);
+        }
 
         return dif;
     }
@@ -86,10 +96,9 @@ public class Match {
     }
 
     public void setStartDateTime(String date, String time) {
-        time.concat(":00");
+        time = time + ":00";
         date = date.substring(9, 13) + "-" + date.substring(6, 8) + "-" + date.substring(3, 5);
-        startDateTime = new DateTime(date + "T" + time + "+03:00");
-        this.startDateTime = startDateTime;
+        this.startDateTime = new DateTime(date + "T" + time + "+03:00");
     }
 
     public void setStadium(String stadium) {

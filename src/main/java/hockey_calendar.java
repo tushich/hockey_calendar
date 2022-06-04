@@ -27,17 +27,23 @@ public class hockey_calendar {
 
             for (Match match_from_site : tableCalender) {
 
+                String summary = match_from_site.getTeams() + "\nСтадион:" + match_from_site.getStadium() + " Турнир:" + match_from_site.getTournament();
 
 
                 Match match_from_dataBase = DataBase.getMatch(match_from_site.getMatchID());
                 if(match_from_dataBase.isEmpty()) // Если пустой, то создадим овый матч
                 {
                     DataBase.addMatch(match_from_site);
-                    // todo оповестить что создан матч
+                    TelegramBot.getInstance().sendMsg(String.format("Добавлен новый матч:\n*%s*. Дата: %s\n%s", summary, match_from_site.getStartDateTime(), match_from_site.getLinkMatch()));
                 }
                 else // Матч уже есть в базеДанных, значит надо найти различия. Обновить. и Сообщить об обновлении.
                 {
-
+                    String diff = match_from_site.compare(match_from_dataBase);
+                    if (!diff.isEmpty())
+                    {
+                        TelegramBot.getInstance().sendMsg(String.format("*%s.*\n %s\n\n%s", summary, diff, match_from_site.getLinkMatch()));
+                    }
+                    DataBase.updateMatch(match_from_site);
                 }
 
 
