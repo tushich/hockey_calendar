@@ -1,23 +1,26 @@
-import com.google.api.client.util.DateTime;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class Match {
     public String tournament;
     public String round;
     public String number;
-    public DateTime startDateTime;
+    public Date startDateTime;
     public String stadium;
     public String teams;
     public String count;
-    public String protokolExist;
+    public Boolean protokolExist;
     public String linkMatch;
     public String matchID;
 
-    String[] colNames = new String[]
+    final String[] colNames = new String[]
             {       "Tournament",
                     "Round",
                     "Number",
-                    "startDate",
-                    "startTime",
+                    "startDateTime",
                     "Stadium",
                     "teams",
                     "count",
@@ -28,27 +31,27 @@ public class Match {
     public String compare(Match another_match)
     {
         String dif = "";
-        if(tournament.equals(another_match.getTournament()))
+        if(!tournament.equals(another_match.getTournament()))
         {
             dif = dif.concat(String.format("\nИзменился турнир:\n%s -> \n%s", tournament, another_match.getTournament()));
         }
-        if(round.equals(another_match.getRound()))
+        if(!round.equals(another_match.getRound()))
         {
             dif = dif.concat(String.format("\nИзменился раунд:\n%s -> \n%s", round, another_match.getRound()));
         }
-        if(startDateTime.equals(another_match.getStartDateTime()))
+        if(!startDateTime.equals(another_match.getStartDateTime()))
         {
-            dif = dif.concat(String.format("\nИзменилась дата и время:\n%t -> \n%t", startDateTime, another_match.getStartDateTime()));
+            dif = dif.concat(String.format("\nИзменилась дата и время:\n%s -> \n%s", getDateString(startDateTime), getDateString(another_match.getStartDateTime())));
         }
-        if(stadium.equals(another_match.getStadium()))
+        if(!stadium.equals(another_match.getStadium()))
         {
             dif = dif.concat(String.format("\nИзменился стадион:\n%s -> \n%s", stadium, another_match.getStadium()));
         }
-        if(protokolExist.equals(another_match.getProtokolExist()))
+        if(!protokolExist.equals(another_match.getProtokolExist()))
         {
             dif = dif.concat("\nДобавлен протокол");
         }
-        if(count.equals(another_match.getCount()))
+        if(!count.equals(another_match.getCount()))
         {
             dif = dif.concat("\nОбновлен счет" + count);
         }
@@ -59,42 +62,6 @@ public class Match {
     public boolean isEmpty()
     {
         return matchID==null || matchID.isEmpty();
-    }
-    public void setByColumnId(Integer colId, String value) {
-        switch (colId)
-        {
-            case(0):
-                setTournament(value);
-                break;
-            case(1):
-                setRound(value);
-                break;
-            case(2):
-                setNumber(value);
-                break;
-            //case(3): setStartDate(value); дату устанавлиаем через отдельный сеттер
-            //case(4): setStartTime(value);
-            case(5):
-                setStadium(value);
-                break;
-            case(6):
-                setTeams(value);
-                break;
-            case(7):
-                setCount(value);
-                break;
-            case(8):
-                setProtokolExist(value);
-                break;
-            case(9):
-                setLinkMatch(value);
-                break;
-            case(10):
-                setMatchID(value);
-                break;
-
-        }
-
     }
 
     public void setCount(String count) {
@@ -114,9 +81,17 @@ public class Match {
     }
 
     public void setStartDateTime(String date, String time) {
-        time = time + ":00";
-        date = date.substring(9, 13) + "-" + date.substring(6, 8) + "-" + date.substring(3, 5);
-        this.startDateTime = new DateTime(date + "T" + time + "+03:00");
+        date = date.substring(9, 13) + "." + date.substring(6, 8) + "." + date.substring(3, 5);
+        DateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.ENGLISH);
+        try {
+            this.startDateTime  = format.parse(date + " " + time);
+        } catch (ParseException e) {
+            System.out.format("\nОшибка установки даты начала для Матча %s\nТекст ошибки:%s", this.matchID, e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+    public void setStartDateTime(Date dateTime) {
+        this.startDateTime = dateTime;
     }
 
     public void setStadium(String stadium) {
@@ -127,7 +102,7 @@ public class Match {
         this.teams = teams;
     }
 
-    public void setProtokolExist(String protokolExist) {
+    public void setProtokolExist(boolean protokolExist) {
         this.protokolExist = protokolExist;
     }
 
@@ -151,8 +126,12 @@ public class Match {
         return number;
     }
 
-    public DateTime getStartDateTime() {
+    public Date getStartDateTime() {
         return startDateTime;
+    }
+
+    public String getStringStartDateTime() {
+        return getDateString(startDateTime);
     }
 
     public String getStadium() {
@@ -167,7 +146,7 @@ public class Match {
         return count;
     }
 
-    public String getProtokolExist() {
+    public Boolean getProtokolExist() {
         return protokolExist;
     }
 
@@ -177,5 +156,11 @@ public class Match {
 
     public String getMatchID() {
         return matchID;
+    }
+
+    private String getDateString(Date dt)
+    {
+        DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        return df.format(dt);
     }
 }

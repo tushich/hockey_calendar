@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public interface Resources {
-    public static String getResource(String name)
+    static String getResource(String name)
     {
         String resource = System.getenv(name);
         if(resource == null) {

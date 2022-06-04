@@ -27,7 +27,7 @@ public class CalenderGoogle {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static Calendar service = null;
     // TODO Сделать командный календарь для каждой команды
-    public String calendarID = Resources.getResource("calendarID");
+    public final String calendarID = Resources.getResource("calendarID");
     // Календарь штерна "ieesvcpisvro03mobsrnv54k5o@group.calendar.google.com";
 
     /**
