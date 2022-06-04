@@ -121,9 +121,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public String getBotToken() {
-
-        return Resources.getResource("token_red_bears_bot");
-        // TODO 0 Сделать нового бота. Одного для всех команд + Новый токен для него
+        return Resources.getResource("token_hockey_notification_bot");
     }
 
 }
