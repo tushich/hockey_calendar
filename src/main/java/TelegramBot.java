@@ -81,10 +81,11 @@ public class TelegramBot extends TelegramLongPollingBot {
             boolean allIsOk = DataBase.addUser(message.getChatId().toString(), Resources.getResource("teamName"), message.getFrom().getFirstName() + " " + message.getFrom().getLastName(), message.getFrom().getUserName());
             String msg;
             if(allIsOk) msg = "Добро пожаловать в чат оповещений по играм команд c сайтов СПБХЛ и ФХСПб\n" +
-                    "https://www.fhspb.ru/" + "https://spbhl.ru/\n" +
+                    "https://www.fhspb.ru/" + "\nhttps://spbhl.ru/\n" +
                     "\nПри изменениях на сайтах СПБХЛ, вы автоматически получите оповещение." +
-                    "\nЧтобы прекратить получать сообщения введите '/stop'" +
-                    "\nКалендарь всех игр находится тут: https://calendar.google.com/calendar/u/0?cid=OW9waHNjamMwMHNzb25qNG80a2QxdGYwYThAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ";
+                    "\nЧтобы прекратить получать сообщения введите '/stop'";
+                    // "\nКалендарь всех игр находится тут: https://calendar.google.com/calendar/u/0?cid=OW9waHNjamMwMHNzb25qNG80a2QxdGYwYThAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ"
+
             else msg = "Произошла ошибка. Не удалось добавить пользователя.";
             sendMsgDirect(update.getMessage().getChatId().toString(), msg);
 
