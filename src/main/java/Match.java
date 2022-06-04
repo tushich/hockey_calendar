@@ -16,18 +16,6 @@ public class Match {
     public String linkMatch;
     public String matchID;
 
-    final String[] colNames = new String[]
-            {       "Tournament",
-                    "Round",
-                    "Number",
-                    "startDateTime",
-                    "Stadium",
-                    "teams",
-                    "count",
-                    "protokolExist",
-                    "linkMatch",
-                    "matchID"};
-
     public String compare(Match another_match)
     {
         String dif = "";
