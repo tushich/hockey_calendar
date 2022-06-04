@@ -78,7 +78,7 @@ public interface DataBase {
                         match.getTournament(),
                         match.getRound(),
                         match.getNumber(),
-                        match.getStartDateTime(),
+                        new Timestamp(match.getStartDateTime().getValue()),
                         match.getStadium(),
                         match.getTeams(),
                         match.getCount(),
@@ -102,7 +102,7 @@ public interface DataBase {
                                ,match.getTournament(),
                                 match.getRound(),
                                 match.getNumber(),
-                                match.getStartDateTime(),
+                                new Timestamp(match.getStartDateTime().getValue()),
                                 match.getStadium(),
                                 match.getTeams(),
                                 match.getCount(),
@@ -122,7 +122,7 @@ public interface DataBase {
                 "Tournament varchar(40), " +
                 "Round varchar(40), " +
                 "Number varchar(40), " +
-                "startDateTime DATETIME, " +
+                "startDateTime timestamp with time zone, " +
                 "Stadium varchar(40), " +
                 "teams varchar(40), " +
                 "count varchar(40), " +
