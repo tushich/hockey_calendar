@@ -1,9 +1,10 @@
+import com.google.api.client.util.DateTime;
+
 public class Match {
     public String tournament;
     public String round;
     public String number;
-    public String startDate;
-    public String startTime;
+    public DateTime startDateTime;
     public String stadium;
     public String teams;
     public String count;
@@ -24,6 +25,27 @@ public class Match {
                     "linkMatch",
                     "matchID"};
 
+    public String compare(Match another_match)
+    {
+        String dif = "";
+        if(tournament.equals(another_match.getTournament()))
+        {
+            dif.concat(String.format("\nИзменился турнир:\n%s -> \n%s", tournament, another_match.getTournament()));
+        }
+        if(round.equals(another_match.getRound()))
+        {
+            dif.concat(String.format("\nИзменился раунд:\n%s -> \n%s", round, another_match.getRound()));
+        }
+        if(round.equals(another_match.getRound()))
+        {
+            dif.concat(String.format("\nИзменился раунд:\n%s -> \n%s", round, another_match.getRound()));
+        }
+
+
+
+        return dif;
+    }
+
     public boolean isEmpty()
     {
         return matchID.isEmpty();
@@ -34,8 +56,8 @@ public class Match {
             case(0): setTournament(value);
             case(1): setRound(value);
             case(2): setNumber(value);
-            case(3): setStartDate(value);
-            case(4): setStartTime(value);
+            //case(3): setStartDate(value); дату устанавлиаем через отдельный сеттер
+            //case(4): setStartTime(value);
             case(5): setStadium(value);
             case(6): setTeams(value);
             case(7): setCount(value);
@@ -63,12 +85,11 @@ public class Match {
         this.round = round;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setStartDateTime(String date, String time) {
+        time.concat(":00");
+        date = date.substring(9, 13) + "-" + date.substring(6, 8) + "-" + date.substring(3, 5);
+        startDateTime = new DateTime(date + "T" + time + "+03:00");
+        this.startDateTime = startDateTime;
     }
 
     public void setStadium(String stadium) {
@@ -103,12 +124,8 @@ public class Match {
         return number;
     }
 
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public String getStartTime() {
-        return startTime;
+    public DateTime getStartDateTime() {
+        return startDateTime;
     }
 
     public String getStadium() {

@@ -3,7 +3,6 @@ import com.google.api.client.util.DateTime;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
-import java.util.Map;
 
 public class hockey_calendar {
 
@@ -34,7 +33,7 @@ public class hockey_calendar {
                 if(match_from_dataBase.isEmpty()) // Если пустой, то создадим овый матч
                 {
                     DataBase.addMatch(match_from_site);
-                    // оповестить что создан матч
+                    // todo оповестить что создан матч
                 }
                 else // Матч уже есть в базеДанных, значит надо найти различия. Обновить. и Сообщить об обновлении.
                 {

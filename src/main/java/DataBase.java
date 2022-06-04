@@ -3,7 +3,6 @@ import java.net.URISyntaxException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public interface DataBase {
     static Connection getConnection() throws URISyntaxException, SQLException {
@@ -51,7 +50,14 @@ public interface DataBase {
             ResultSet result1 = statement.executeQuery(
                     "SELECT * FROM matches where matchId='" + matchId + "'");
            if(result1.next()) {
-               for (int i = 0; i < match.colNames.length; i++) {
+               for (int i = 0; i < match.colNames.length; i++)
+               {
+                   if(i == 3 || i == 4) // дату собираем из 2х строк
+                   {
+                       match.setStartDateTime(result1.getString(match.colNames[3]), result1.getString(match.colNames[4]));
+                       i = 4;
+                       continue;
+                   }
                    match.setByColumnId(i, result1.getString(match.colNames[i]));
                }
             }
@@ -65,46 +71,44 @@ public interface DataBase {
     static boolean addMatch(Match match){
         return executeSQLUpdate(
                 String.format("INSERT INTO " +
-                        "matches(matchID, Tournament, Round, Number, startDate, startTime, Stadium, teams, count, protokolExist, linkMatch) " +
-                        "values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
+                        "matches(matchID, Tournament, Round, Number, startDateTime, Stadium, teams, count, protokolExist, linkMatch) " +
+                        "values('%s','%s','%s','%s','%t','%s','%s','%s','%s','%s')",
                         match.getMatchID(),
                         match.getTournament(),
                         match.getRound(),
                         match.getNumber(),
-                        match.getStartDate(),
-                        match.getStartTime(),
+                        match.getStartDateTime(),
                         match.getStadium(),
                         match.getTeams(),
                         match.getCount(),
                         match.getProtokolExist(),
                         match.getLinkMatch()));
+        // TODO как добавлять дату в запросы sql
     }
-    static boolean updateMatch(Map<String,String> match){
+    static boolean updateMatch(Match match){
         return executeSQLUpdate(
                 String.format("UPDATE matches SET " +
                                 "Tournament = '%s', " +
                                 "Round = '%s', " +
                                 "Number = '%s', " +
-                                "startDate = '%s', " +
-                                "startTime = '%s', " +
+                                "startDateTime = '%t', " +
                                 "Stadium = '%s', " +
                                 "teams = '%s', " +
                                 "count = '%s', " +
                                 "protokolExist = '%s', " +
                                 "linkMatch = '%s' " +
                                 "WHERE  matchID = '%s'"
-                               ,
-                                match.get("matchID"),
-                                match.get("Tournament"),
-                                match.get("Round"),
-                                match.get("Number"),
-                                match.get("startDate"),
-                                match.get("startTime"),
-                                match.get("Stadium"),
-                                match.get("teams"),
-                                match.get("count"),
-                                match.get("protokolExist"),
-                                match.get("linkMatch")));
+                               ,match.getTournament(),
+                                match.getRound(),
+                                match.getNumber(),
+                                match.getStartDateTime(),
+                                match.getStadium(),
+                                match.getTeams(),
+                                match.getCount(),
+                                match.getProtokolExist(),
+                                match.getLinkMatch(),
+                                match.getMatchID()));
+        // TODO как добавлять дату в запросы sql
     }
 
     static boolean delUser(String userID, String team){
@@ -117,8 +121,7 @@ public interface DataBase {
                 "Tournament varchar(40), " +
                 "Round varchar(40), " +
                 "Number varchar(40), " +
-                "startDate DATE, " +
-                "startTime TIME, " +
+                "startDateTime DATETIME, " +
                 "Stadium varchar(40), " +
                 "teams varchar(40), " +
                 "count varchar(40), " +
