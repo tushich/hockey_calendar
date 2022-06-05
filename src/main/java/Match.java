@@ -16,30 +16,30 @@ public class Match {
     public String linkMatch;
     public String matchID;
 
-    public String compare(Match another_match)
+    public String compare(Match new_match)
     {
         String dif = "";
-        if(!tournament.equals(another_match.getTournament()))
+        if(!tournament.equals(new_match.getTournament()))
         {
-            dif = dif.concat(String.format("\nИзменился турнир:\n%s -> \n%s", tournament, another_match.getTournament()));
+            dif = dif.concat(String.format("\nИзменился турнир:\n%s -> \n%s", tournament, new_match.getTournament()));
         }
-        if(!round.equals(another_match.getRound()))
+        if(!round.equals(new_match.getRound()))
         {
-            dif = dif.concat(String.format("\nИзменился раунд:\n%s -> \n%s", round, another_match.getRound()));
+            dif = dif.concat(String.format("\nИзменился раунд:\n%s -> \n%s", round, new_match.getRound()));
         }
-        if(!startDateTime.equals(another_match.getStartDateTime()))
+        if(!startDateTime.equals(new_match.getStartDateTime()))
         {
-            dif = dif.concat(String.format("\nИзменилась дата и время:\n%s -> \n%s", getDateString(startDateTime), getDateString(another_match.getStartDateTime())));
+            dif = dif.concat(String.format("\nИзменилась дата и время:\n%s -> \n%s", getDateString(startDateTime), getDateString(new_match.getStartDateTime())));
         }
-        if(!stadium.equals(another_match.getStadium()))
+        if(!stadium.equals(new_match.getStadium()))
         {
-            dif = dif.concat(String.format("\nИзменился стадион:\n%s -> \n%s", stadium, another_match.getStadium()));
+            dif = dif.concat(String.format("\nИзменился стадион:\n%s -> \n%s", stadium, new_match.getStadium()));
         }
-        if(!protokolExist.equals(another_match.getProtokolExist()))
+        if(!protokolExist.equals(new_match.getProtokolExist()))
         {
             dif = dif.concat("\nДобавлен протокол");
         }
-        if(!count.equals(another_match.getCount()))
+        if(!count.equals(new_match.getCount()))
         {
             dif = dif.concat("\nОбновлен счет" + count);
         }

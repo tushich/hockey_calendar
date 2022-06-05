@@ -1,8 +1,18 @@
+import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class hockey_calendar {
 
     public static void main(String[] args) {
+
+      /*  try {
+            DataBase.executeSQLUpdate("UPDATE matches SET Tournament = 'awdawdawd' WHERE  matchID = '5617v78585';", null);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }*/
         // DataBase.createTableUsers();
         // DataBase.createTableMatches();
 
@@ -36,7 +46,7 @@ public class hockey_calendar {
                         TelegramBot.getInstance().sendMsg(String.format("Добавлен новый матч:\n*%s*. Дата: %s\n%s", summary, match_from_site.getStringStartDateTime(), match_from_site.getLinkMatch()));
                     } else // Матч уже есть в базеДанных, значит надо найти различия. Обновить. и Сообщить об обновлении.
                     {
-                        String diff = match_from_site.compare(match_from_dataBase);
+                        String diff = match_from_dataBase.compare(match_from_site);
                         if (!diff.isEmpty()) {
                             if(!DataBase.updateMatch(match_from_site))
                                 continue; // не удалось обновить
