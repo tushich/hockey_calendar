@@ -2,6 +2,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public interface DataBase {
@@ -63,7 +64,7 @@ public interface DataBase {
                 match.setCount(result1.getString("Count"));
                 match.setLinkMatch(result1.getString("LinkMatch"));
                 match.setMatchID(result1.getString("MatchID"));
-                match.setStartDateTime(result1.getTimestamp("StartDateTime"));
+                match.setStartDateTime(new Date(result1.getTimestamp("StartDateTime").getTime()));
             }
             connection.close();
         } catch (SQLException | URISyntaxException e) {
