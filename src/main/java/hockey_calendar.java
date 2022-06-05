@@ -16,6 +16,7 @@ public class hockey_calendar {
         // DataBase.createTableUsers();
         // DataBase.createTableMatches();
 
+
         TelegramBot.getInstance().startListen();
 
         // TODO 0. Сделать подписку на оповещения по командам из чата. Привязку хранить в списке пользователей.
