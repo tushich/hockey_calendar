@@ -33,19 +33,19 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     /**
      * Метод отправляет сообщения по списку рассылки из БД
-     * @param s Строка, которую необходимот отправить в качестве сообщения.
+     * @param message Строка, которую необходимот отправить в качестве сообщения.
      */
-    public synchronized void sendMsg(String s) {
+    public synchronized void sendBroadcastMsg(String message, String team_id) {
 
         if(location.equals("prod")) {
-            List<String> list = DataBase.getUsersList(Resources.getResource("teamName"));
+            List<String> list = DataBase.getUsersListSubscribedForTeam(team_id);
             for (String chat_id : list) {
-                sendMsgDirect(chat_id, s);
+                sendMsgDirect(chat_id, message);
             }
         }
         else // если шлёт в тесте, то отправялть админу 1 раз
         {
-            sendMsgDirect(admin_chat_id, s);
+            sendMsgDirect(admin_chat_id, message);
         }
     }
 
@@ -78,7 +78,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
         if(message.getText().equals("/start")){
-            // TODO Заменить TeamName на Team ID
+            // TODO добавить подписку в таблицу подписок
             boolean allIsOk = DataBase.addUser(message.getChatId().toString(), Resources.getResource("teamName"), message.getFrom().getFirstName() + " " + message.getFrom().getLastName(), message.getFrom().getUserName());
             String msg;
             if(allIsOk) msg = "Добро пожаловать в чат оповещений по играм команд c сайтов СПБХЛ и ФХСПб\n" +

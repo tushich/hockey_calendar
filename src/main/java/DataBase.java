@@ -6,14 +6,23 @@ import java.util.Date;
 import java.util.List;
 
 public interface DataBase {
-    static Connection getConnection() throws URISyntaxException, SQLException {
-        URI dbUri = new URI(Resources.getResource("DATABASE_URL"));
 
-        String username = dbUri.getUserInfo().split(":")[0];
-        String password = dbUri.getUserInfo().split(":")[1];
-        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath() + "?sslmode=require";
+    static boolean addUser(String userID, String team, String FIO, String telegramLogin) {
+        try {
+            return executeSQLUpdate(String.format("INSERT INTO users(userID, team, FIO, telegramLogin) values('%s','%s','%s','%s')", userID, team, FIO, telegramLogin), null);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        return DriverManager.getConnection(dbUrl, username, password);
+    static boolean delUser(String userID, String team) {
+        try {
+            return executeSQLUpdate("DELETE FROM users WHERE userID='" + userID + "' and team='" + team + "'", null);
+        } catch (SQLException | URISyntaxException e) {
+            System.out.format("\nОшибка удаления пользователя:%s\n Команда:%s\nТекст ошибки:%s", userID, team, e.getMessage());
+            throw new RuntimeException(e);
+        }
+
     }
 
     static List<String> getUsersList(String team) {
@@ -33,14 +42,6 @@ public interface DataBase {
             e.printStackTrace();
         }
         return list;
-    }
-
-    static boolean addUser(String userID, String team, String FIO, String telegramLogin) {
-        try {
-            return executeSQLUpdate(String.format("INSERT INTO users(userID, team, FIO, telegramLogin) values('%s','%s','%s','%s')", userID, team, FIO, telegramLogin), null);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     static Match getMatch(String matchId) {
@@ -65,6 +66,7 @@ public interface DataBase {
                 match.setLinkMatch(result1.getString("LinkMatch"));
                 match.setMatchID(result1.getString("MatchID"));
                 match.setStartDateTime(new Date(result1.getTimestamp("StartDateTime").getTime()));
+                match.setTeam_id(result1.getString("team_id"));
             }
             connection.close();
         } catch (SQLException | URISyntaxException e) {
@@ -78,8 +80,8 @@ public interface DataBase {
         try {
             return executeSQLUpdate(
                     String.format("INSERT INTO " +
-                                    "matches(matchID, Tournament, Round, Number, startDateTime, Stadium, teams, count, protokolExist, linkMatch) " +
-                                    "values('%s','%s','%s','%s',?,'%s','%s','%s','%s','%s')",
+                                    "matches(matchID, Tournament, Round, Number, startDateTime, Stadium, teams, count, protokolExist, linkMatch, team_id) " +
+                                    "values('%s','%s','%s','%s',?,'%s','%s','%s','%s','%s', '%s')",
                             match.getMatchID(),
                             match.getTournament(),
                             match.getRound(),
@@ -88,7 +90,8 @@ public interface DataBase {
                             match.getTeams(),
                             match.getCount(),
                             match.getProtokolExist(),
-                            match.getLinkMatch()), new Timestamp(match.getStartDateTime().getTime()));
+                            match.getLinkMatch(),
+                            match.getTeam_id()), new Timestamp(match.getStartDateTime().getTime()));
         } catch (SQLException | URISyntaxException e) {
             System.out.format("\nОшибка добавления матча %s\nТекст ошибки:%s", match.getMatchID(), e.getMessage());
             throw new RuntimeException(e);
@@ -108,7 +111,8 @@ public interface DataBase {
                                     "teams = '%s', " +
                                     "count = '%s', " +
                                     "protokolExist = '%s', " +
-                                    "linkMatch = '%s' " +
+                                    "linkMatch = '%s', " +
+                                    "team_id = '%s' " +
                                     "WHERE  matchID = '%s'"
                             , match.getTournament(),
                             match.getRound(),
@@ -118,6 +122,7 @@ public interface DataBase {
                             match.getCount(),
                             match.getProtokolExist(),
                             match.getLinkMatch(),
+                            match.getTeam_id(),
                             match.getMatchID()), new Timestamp(match.getStartDateTime().getTime()));
         } catch (SQLException | URISyntaxException e) {
             System.out.format("\nОшибка обновления матча %s\nТекст ошибки:%s", match.getMatchID(), e.getMessage());
@@ -126,14 +131,41 @@ public interface DataBase {
 
     }
 
-    static boolean delUser(String userID, String team) {
+    static boolean addubscription(String userID, String team_name, String team_id) {
         try {
-            return executeSQLUpdate("DELETE FROM users WHERE userID='" + userID + "' and team='" + team + "'", null);
+            return executeSQLUpdate(String.format("INSERT INTO subscriptions(userId, team_name, team_id) values('%s','%s','%s')", userID, team_name, team_id), null);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    static boolean delSubscription(String userID, String team_id) {
+        try {
+            return executeSQLUpdate("DELETE FROM subscriptions WHERE userID='" + userID + "' and team_id='" + team_id + "'", null);
         } catch (SQLException | URISyntaxException e) {
-            System.out.format("\nОшибка удаления пользователя:%s\n Команда:%s\nТекст ошибки:%s", userID, team, e.getMessage());
+            System.out.format("\nОшибка удаления подписки User:%s\n team_id:%s\nТекст ошибки:%s", userID, team_id, e.getMessage());
             throw new RuntimeException(e);
         }
 
+    }
+
+    static List<String> getUsersListSubscribedForTeam(String team_id) {
+        List<String> list = new ArrayList<>();
+        try {
+            Connection connection = getConnection();
+            Statement statement = connection.createStatement();
+
+            //Выполним запрос
+            ResultSet result1 = statement.executeQuery(
+                    "SELECT userid FROM subcriptions where team_id='" + team_id + "'");
+            while (result1.next()) {
+                list.add(result1.getString("userid"));
+            }
+            connection.close();
+        } catch (SQLException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     @SuppressWarnings("unused")
@@ -156,10 +188,16 @@ public interface DataBase {
         }
     }
 
-    @SuppressWarnings("unused")
     static boolean createTableUsers() {
         try {
             return executeSQLUpdate("CREATE TABLE users(userId varchar(40), team varchar(40), FIO varchar(40), telegramLogin varchar(40), PRIMARY KEY(userId))", null);
+        } catch (SQLException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    static boolean createTableSubscriptions() {
+        try {
+            return executeSQLUpdate("CREATE TABLE subscriptions(userId varchar(40), team_name varchar(40), team_id varchar(40))", null);
         } catch (SQLException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -176,4 +214,13 @@ public interface DataBase {
         return true;
     }
 
+    static Connection getConnection() throws URISyntaxException, SQLException {
+        URI dbUri = new URI(Resources.getResource("DATABASE_URL"));
+
+        String username = dbUri.getUserInfo().split(":")[0];
+        String password = dbUri.getUserInfo().split(":")[1];
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath() + "?sslmode=require";
+
+        return DriverManager.getConnection(dbUrl, username, password);
+    }
 }

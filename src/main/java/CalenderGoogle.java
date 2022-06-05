@@ -1,3 +1,4 @@
+/*
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -30,10 +31,12 @@ public class CalenderGoogle {
     public final String calendarID = Resources.getResource("calendarID");
     // Календарь штерна "ieesvcpisvro03mobsrnv54k5o@group.calendar.google.com";
 
-    /**
+    */
+/**
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved tokens/ folder.
-     */
+     *//*
+
     private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
     private static final String SERVICE_ACCOUNT_FILE_PATH = "src/main/resources/stern-calendar.json";
 
@@ -104,7 +107,7 @@ public class CalenderGoogle {
             event.setId(eventId);
             service.events().insert(calendarID, event).execute();
             System.out.println("Новое событие");
-            TelegramBot.getInstance().sendMsg(String.format("Добавлен новый матч:\n*%s*. Дата: %s\n%s", Summary, getDateString(event.getStart()), linkMatch));
+            TelegramBot.getInstance().sendBroadcastMsg(String.format("Добавлен новый матч:\n*%s*. Дата: %s\n%s", Summary, getDateString(event.getStart()), linkMatch));
         }
         else
         {
@@ -157,3 +160,4 @@ public class CalenderGoogle {
 
     }
 }
+*/

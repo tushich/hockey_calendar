@@ -6,6 +6,8 @@ import java.util.Locale;
 
 public class Match {
     public String tournament;
+
+    public String team_id;
     public String round;
     public String number;
     public Date startDateTime;
@@ -150,5 +152,13 @@ public class Match {
     {
         DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         return df.format(dt);
+    }
+
+    public void setTeam_id(String team_id) {
+        this.team_id = team_id;
+    }
+
+    public String getTeam_id() {
+        return team_id;
     }
 }

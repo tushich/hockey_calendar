@@ -8,7 +8,11 @@ import java.util.List;
 
 public interface siteSPBHL {
 
-    static List<Match> getMatchTable(String url) {
+    static List<Match> getMatchTable(String team_id) {
+
+        String url = String.format("http://spbhl.ru/Schedule?TeamID=%s", team_id);
+        // TODO Добавить выборку по сайтам. Добавить ФХСПб
+
         List<Match> matchTable = new ArrayList<>();
 
         Document doc;
@@ -54,6 +58,7 @@ public interface siteSPBHL {
             match.setStadium(cols.get(5).text());
             match.setTeams(cols.get(6).text());
             match.setCount(cols.get(7).text());
+            match.setTeam_id(team_id);
 
             matchTable.add(match);
 
