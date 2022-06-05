@@ -20,7 +20,7 @@ public class hockey_calendar {
         // TODO 0. Подключить сайт ФХР СПБ.
         // TODO 1. Сделать подписку на оповещения по командам из чата. Привязку хранить в списке пользователей.
 
-
+        // TODO 0 Получать список команд и списка подписок
         String[] teamIDArray = new String[2];
         teamIDArray[0] = Resources.getResource("teamIdSpbhl_red_bears_main");
         teamIDArray[1] = Resources.getResource("teamIdSpbhl_red_bears_farm");

@@ -78,7 +78,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
         if(message.getText().equals("/start")){
-            // TODO добавить подписку в таблицу подписок
+            // TODO добавить запись подписки в таблицу подписок
             boolean allIsOk = DataBase.addUser(message.getChatId().toString(), Resources.getResource("teamName"), message.getFrom().getFirstName() + " " + message.getFrom().getLastName(), message.getFrom().getUserName());
             String msg;
             if(allIsOk) msg = "Добро пожаловать в чат оповещений по играм команд c сайтов СПБХЛ и ФХСПб\n" +
