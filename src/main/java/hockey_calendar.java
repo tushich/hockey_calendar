@@ -6,7 +6,7 @@ public class hockey_calendar {
 
     public static void main(String[] args) {
 
-      /*  try {
+        /*try {
             DataBase.executeSQLUpdate("UPDATE matches SET Tournament = 'awdawdawd' WHERE  matchID = '5617v78585';", null);
         } catch (SQLException e) {
             throw new RuntimeException(e);
