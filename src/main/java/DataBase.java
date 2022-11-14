@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface DataBase {
 
-    static boolean addUser(String userID, String team, String FIO, String telegramLogin) {
+    static boolean addUser(String userID, String FIO, String telegramLogin) {
         try {
-            return executeSQLUpdate(String.format("INSERT INTO users(userID, team, FIO, telegramLogin) values('%s','%s','%s','%s')", userID, team, FIO, telegramLogin), null);
+            return executeSQLUpdate(String.format("INSERT INTO users(userID, FIO, telegramLogin) values('%s','%s','%s')", userID, FIO, telegramLogin), null);
         } catch (Exception e) {
-            String errText = String.format("\nОшибка добавления пользователя: %s\n Команда:%s\nТекст ошибки:%s", telegramLogin, team, e.getMessage());
+            String errText = String.format("\nОшибка добавления пользователя.\n ФИО: %s\n Логин: %s\nТекст ошибки: %s", FIO, telegramLogin, e.getMessage());
             System.out.format(errText);
             TelegramBot.getInstance().sendMsgToAdmin(errText);
             throw new RuntimeException(e);
@@ -177,7 +177,7 @@ public interface DataBase {
 
             //Выполним запрос
             ResultSet result1 = statement.executeQuery(
-                    "SELECT userid FROM subcriptions where team_id='" + team_id + "'" + " and site_id=" + site_id);
+                    "SELECT userid FROM Subscriptions where team_id='" + team_id + "'" + " and site_id=" + site_id);
             while (result1.next()) {
                 list.add(result1.getString("userid"));
             }
@@ -200,7 +200,9 @@ public interface DataBase {
                     "teams varchar(100), " +
                     "count varchar(40), " +
                     "protokolExist BOOLEAN NOT NULL DEFAULT false, " +
-                    "linkMatch varchar(100),  " +
+                    "linkMatch varchar(100)," +
+                    "Team_id varchar(40)," +
+                    "Site_id varchar(40),  " +
                     "PRIMARY KEY(matchID))", null);
         } catch (SQLException | URISyntaxException e) {
             throw new RuntimeException(e);
@@ -215,7 +217,7 @@ public interface DataBase {
     }
     static boolean createTableSubscriptions() {
         try {
-            return executeSQLUpdate("CREATE TABLE subscriptions(userId varchar(40), team_name varchar(40), team_id varchar(40), site_id varchar(40))", null);
+            return executeSQLUpdate("CREATE TABLE Subscriptions(userId varchar(40), team_name varchar(40), team_id varchar(40), site_id varchar(40))", null);
         } catch (SQLException | URISyntaxException e) {
             throw new RuntimeException(e);
         }

@@ -7,8 +7,14 @@ public class hockey_calendar {
     public static void main(String[] args) {
         // TODO Сделать первоначальное заполнение настроек и таблиц. Например для переноса.
 
-        // Процедуры первоначального заполнения. Использовались разово.
+        // Процедуры первоначального заполнения.
+        /*
+        DataBase.createTableMatches();
+        DataBase.createTableUsers();
+        DataBase.createTableSubscriptions();
+        */
 
+        // Временные процедурки
         /*
         try {
             DataBase.executeSQLUpdate("UPDATE matches SET Count = '0' WHERE  matchID = '5809v86761'", null);
