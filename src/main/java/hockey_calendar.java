@@ -5,9 +5,8 @@ import java.util.List;
 public class hockey_calendar {
 
     public static void main(String[] args) {
-        // TODO Сделать первоначальное заполнение настроек и таблиц. Например для переноса.
 
-        // Процедуры первоначального заполнения.
+        // Процедуры первоначального заполнения. Запускать при первом запуске в окружении
         /*
         DataBase.createTableMatches();
         DataBase.createTableUsers();
@@ -34,8 +33,8 @@ public class hockey_calendar {
 
         TelegramBot.getInstance().startListen();
 
-        // TODO 0 Получать список команд и списка подписок
-        // TODO 1. Сделать подписку на оповещения по командам из чата. Привязку хранить в списке пользователей.
+        // TODO 0. Сделать подписку на оповещения по командам из чата. Привязку хранить в списке пользователей.
+        // TODO 1. Получать список команд и списка подписок
 
         ElementMass[] teamsArray = new ElementMass[3];
         teamsArray[0] = new ElementMass("fhspb.ru", Resources.getResource("teamIdSpbhl_red_bears_2012"));
@@ -43,7 +42,7 @@ public class hockey_calendar {
         teamsArray[2] = new ElementMass("spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_farm"));
 
 
-        // TODO 3. СРавнивать состав команд. Могут поменять команду а ID оставить старый т.е. в боте больше матчей чем на сайте
+        // TODO 3. Сравнивать состав команд. Могут поменять команду а ID оставить старый т.е. в боте больше матчей чем на сайте
 
         // CalenderGoogle calender = new CalenderGoogle();
 

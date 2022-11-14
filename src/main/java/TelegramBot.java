@@ -87,7 +87,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             String msg;
             if(allIsOk) msg = "Добро пожаловать в чат оповещений по играм команд c сайтов СПБХЛ и ФХСПб\n" +
                     "https://www.fhspb.ru/" + "\nhttps://spbhl.ru/\n" +
-                    "\nПри изменениях на сайтах СПБХЛ, вы автоматически получите оповещение." +
+                    "\nПри изменениях на сайтах, вы автоматически получите оповещение." +
                     "\nЧтобы прекратить получать сообщения введите '/stop'";
                     // "\nКалендарь всех игр находится тут: https://calendar.google.com/calendar/u/0?cid=OW9waHNjamMwMHNzb25qNG80a2QxdGYwYThAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ"
 
@@ -97,7 +97,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
         else if(message.getText().equals("/stop"))
         {
-            boolean allIsOk = DataBase.delUser(update.getMessage().getChatId().toString(), Resources.getResource("teamName"));
+            boolean allIsOk = DataBase.delUser(update.getMessage().getChatId().toString());
             String msg;
             if(allIsOk) msg = "Пока и жаль! Чтобы начать общение заново, необходимо написать '/start'";
             else msg = "Произошла ошибка. Не удалось удалить пользователя.";

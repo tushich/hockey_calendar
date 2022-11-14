@@ -18,11 +18,12 @@ public interface DataBase {
         }
     }
 
-    static boolean delUser(String userID, String team) {
+    static boolean delUser(String userID) {
         try {
-            return executeSQLUpdate("DELETE FROM users WHERE userID='" + userID + "' and team='" + team + "'", null);
+            return executeSQLUpdate("DELETE FROM users WHERE userID='" + userID, null);
+            // TODO Сделать удаление подписок при удалении пользователя
         } catch (SQLException | URISyntaxException e) {
-            String errText = String.format("\nОшибка удаления пользователя:%s\n Команда:%s\nТекст ошибки:%s", userID, team, e.getMessage());
+            String errText = String.format("\nОшибка удаления пользователя: %s\n Команда: %s\nТекст ошибки: %s", userID, e.getMessage());
             System.out.format(errText);
             TelegramBot.getInstance().sendMsgToAdmin(errText);
             throw new RuntimeException(e);
@@ -146,9 +147,9 @@ public interface DataBase {
 
     }
 
-    static boolean addSubscription(String userID, String team_name, String team_id, String site_id) {
+    static boolean addSubscription(String userID, String team_id, String site_id) {
         try {
-            return executeSQLUpdate(String.format("INSERT INTO subscriptions(userId, team_name, team_id, site_id) values('%s','%s','%s','%s')", userID, team_name, team_id, site_id), null);
+            return executeSQLUpdate(String.format("INSERT INTO subscriptions(userId, team_id, site_id) values('%s','%s','%s')", userID, team_id, site_id), null);
         } catch (Exception e) {
             String errText = String.format("\nОшибка добавления подписки User:%s\nteam_id:%s\nsite_id:%s\nТекст ошибки:%s", userID, team_id, site_id, e.getMessage());
             System.out.format(errText);
@@ -217,7 +218,7 @@ public interface DataBase {
     }
     static boolean createTableSubscriptions() {
         try {
-            return executeSQLUpdate("CREATE TABLE Subscriptions(userId varchar(40), team_name varchar(40), team_id varchar(40), site_id varchar(40))", null);
+            return executeSQLUpdate("CREATE TABLE Subscriptions(userId varchar(40), team_id varchar(40), site_id varchar(40))", null);
         } catch (SQLException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
