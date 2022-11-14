@@ -69,6 +69,7 @@ public interface DataBase {
                 match.setMatchID(result1.getString("MatchID"));
                 match.setStartDateTime(new Date(result1.getTimestamp("StartDateTime").getTime()));
                 match.setTeam_id(result1.getString("team_id"));
+                match.setMatchID(result1.getString("site_id"));
             }
             connection.close();
         } catch (SQLException | URISyntaxException e) {
@@ -82,7 +83,7 @@ public interface DataBase {
         try {
             return executeSQLUpdate(
                     String.format("INSERT INTO " +
-                                    "matches(matchID, Tournament, Round, Number, startDateTime, Stadium, teams, count, protokolExist, linkMatch, team_id) " +
+                                    "matches(matchID, Tournament, Round, Number, startDateTime, Stadium, teams, count, protokolExist, linkMatch, team_id, site_id) " +
                                     "values('%s','%s','%s','%s',?,'%s','%s','%s','%s','%s', '%s')",
                             match.getMatchID(),
                             match.getTournament(),
@@ -93,7 +94,8 @@ public interface DataBase {
                             match.getCount(),
                             match.getProtokolExist(),
                             match.getLinkMatch(),
-                            match.getTeam_id()), new Timestamp(match.getStartDateTime().getTime()));
+                            match.getTeam_id(),
+                            match.getSiteID()), new Timestamp(match.getStartDateTime().getTime()));
         } catch (SQLException | URISyntaxException e) {
             System.out.format("\nОшибка добавления матча %s\nТекст ошибки:%s", match.getMatchID(), e.getMessage());
             throw new RuntimeException(e);
@@ -115,6 +117,7 @@ public interface DataBase {
                                     "protokolExist = '%s', " +
                                     "linkMatch = '%s', " +
                                     "team_id = '%s' " +
+                                    "site_id = '%s' " +
                                     "WHERE  matchID = '%s'"
                             , match.getTournament(),
                             match.getRound(),
@@ -125,6 +128,7 @@ public interface DataBase {
                             match.getProtokolExist(),
                             match.getLinkMatch(),
                             match.getTeam_id(),
+                            match.getSiteID(),
                             match.getMatchID()), new Timestamp(match.getStartDateTime().getTime()));
         } catch (SQLException | URISyntaxException e) {
             System.out.format("\nОшибка обновления матча %s\nТекст ошибки:%s", match.getMatchID(), e.getMessage());
@@ -133,25 +137,25 @@ public interface DataBase {
 
     }
 
-    static boolean addubscription(String userID, String team_name, String team_id) {
+    static boolean addubscription(String userID, String team_name, String team_id, String site_id) {
         try {
-            return executeSQLUpdate(String.format("INSERT INTO subscriptions(userId, team_name, team_id) values('%s','%s','%s')", userID, team_name, team_id), null);
+            return executeSQLUpdate(String.format("INSERT INTO subscriptions(userId, team_name, team_id, site_id) values('%s','%s','%s','%s')", userID, team_name, team_id, site_id), null);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    static boolean delSubscription(String userID, String team_id) {
+    static boolean delSubscription(String userID, String team_id, String site_id) {
         try {
-            return executeSQLUpdate("DELETE FROM subscriptions WHERE userID='" + userID + "' and team_id='" + team_id + "'", null);
+            return executeSQLUpdate("DELETE FROM subscriptions WHERE userID='" + userID + "' and team_id='" + team_id + "'" + "' and site_id='" + site_id + "'", null);
         } catch (SQLException | URISyntaxException e) {
-            System.out.format("\nОшибка удаления подписки User:%s\n team_id:%s\nТекст ошибки:%s", userID, team_id, e.getMessage());
+            System.out.format("\nОшибка удаления подписки User:%s\nteam_id:%s\nsite_id:%s\nТекст ошибки:%s", userID, team_id, site_id, e.getMessage());
             throw new RuntimeException(e);
         }
 
     }
 
-    static List<String> getUsersListSubscribedForTeam(String team_id) {
+    static List<String> getUsersListSubscribedForTeam(String team_id, String site_id) {
         List<String> list = new ArrayList<>();
         try {
             Connection connection = getConnection();
@@ -159,7 +163,7 @@ public interface DataBase {
 
             //Выполним запрос
             ResultSet result1 = statement.executeQuery(
-                    "SELECT userid FROM subcriptions where team_id='" + team_id + "'");
+                    "SELECT userid FROM subcriptions where team_id='" + team_id + "'" + " and site_id=" + site_id);
             while (result1.next()) {
                 list.add(result1.getString("userid"));
             }
@@ -199,7 +203,7 @@ public interface DataBase {
     }
     static boolean createTableSubscriptions() {
         try {
-            return executeSQLUpdate("CREATE TABLE subscriptions(userId varchar(40), team_name varchar(40), team_id varchar(40))", null);
+            return executeSQLUpdate("CREATE TABLE subscriptions(userId varchar(40), team_name varchar(40), team_id varchar(40), site_id varchar(40))", null);
         } catch (SQLException | URISyntaxException e) {
             throw new RuntimeException(e);
         }

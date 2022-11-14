@@ -35,10 +35,10 @@ public class TelegramBot extends TelegramLongPollingBot {
      * Метод отправляет сообщения по списку рассылки из БД
      * @param message Строка, которую необходимот отправить в качестве сообщения.
      */
-    public synchronized void sendBroadcastMsg(String message, String team_id) {
+    public synchronized void sendBroadcastMsg(String message, String team_id, String site_id) {
 
         if(location.equals("prod")) {
-            List<String> list = DataBase.getUsersListSubscribedForTeam(team_id);
+            List<String> list = DataBase.getUsersListSubscribedForTeam(team_id, site_id);
             for (String chat_id : list) {
                 sendMsgDirect(chat_id, message);
             }

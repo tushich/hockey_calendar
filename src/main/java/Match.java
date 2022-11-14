@@ -16,7 +16,7 @@ public class Match {
     public Boolean protokolExist;
     public String linkMatch;
     public String matchID;
-
+    public String siteID;
     public String compare(Match new_match)
     {
         String dif = "";
@@ -155,6 +155,14 @@ public class Match {
 
     public void setTeam_id(String team_id) {
         this.team_id = team_id;
+    }
+
+    public void setSiteID(String siteID) {
+        this.siteID = siteID;
+    }
+
+    public String getSiteID() {
+        return siteID;
     }
 
     public String getTeam_id() {
