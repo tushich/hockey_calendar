@@ -62,6 +62,11 @@ public class TelegramBot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(chatId);
+
+        s = s
+            .replace("_", "\\_")
+            .replace("[", "\\[")
+            .replace("`", "\\`");
         sendMessage.setText(s);
         try {
             execute(sendMessage);

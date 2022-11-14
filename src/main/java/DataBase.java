@@ -73,7 +73,7 @@ public interface DataBase {
                 match.setMatchID(result1.getString("MatchID"));
                 match.setStartDateTime(new Date(result1.getTimestamp("StartDateTime").getTime()));
                 match.setTeam_id(result1.getString("team_id"));
-                match.setMatchID(result1.getString("site_id"));
+                match.setSiteID(result1.getString("site_id"));
             }
             connection.close();
         } catch (SQLException | URISyntaxException e) {
