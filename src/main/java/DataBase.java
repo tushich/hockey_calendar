@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+// TODO 4. Если не получилось выполнить SQL операцию сделать отправку ошибок в чат Максиму Т.
+
 public interface DataBase {
 
     static boolean addUser(String userID, String team, String FIO, String telegramLogin) {

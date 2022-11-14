@@ -43,7 +43,7 @@ public class Match {
         }
         if(!count.equals(new_match.getCount()))
         {
-            dif = dif.concat("\nОбновлен счет" + count);
+            dif = dif.concat("\nОбновлен счет: " + new_match.getCount());
         }
 
         return dif;
