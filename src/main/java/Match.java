@@ -6,7 +6,6 @@ import java.util.Locale;
 
 public class Match {
     public String tournament;
-
     public String team_id;
     public String round;
     public String number;
