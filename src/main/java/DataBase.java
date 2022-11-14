@@ -5,14 +5,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-// TODO 4. Если не получилось выполнить SQL операцию сделать отправку ошибок в чат Максиму Т.
-
 public interface DataBase {
 
     static boolean addUser(String userID, String team, String FIO, String telegramLogin) {
         try {
             return executeSQLUpdate(String.format("INSERT INTO users(userID, team, FIO, telegramLogin) values('%s','%s','%s','%s')", userID, team, FIO, telegramLogin), null);
         } catch (Exception e) {
+            String errText = String.format("\nОшибка добавления пользователя: %s\n Команда:%s\nТекст ошибки:%s", telegramLogin, team, e.getMessage());
+            System.out.format(errText);
+            TelegramBot.getInstance().sendMsgToAdmin(errText);
             throw new RuntimeException(e);
         }
     }
@@ -21,13 +22,15 @@ public interface DataBase {
         try {
             return executeSQLUpdate("DELETE FROM users WHERE userID='" + userID + "' and team='" + team + "'", null);
         } catch (SQLException | URISyntaxException e) {
-            System.out.format("\nОшибка удаления пользователя:%s\n Команда:%s\nТекст ошибки:%s", userID, team, e.getMessage());
+            String errText = String.format("\nОшибка удаления пользователя:%s\n Команда:%s\nТекст ошибки:%s", userID, team, e.getMessage());
+            System.out.format(errText);
+            TelegramBot.getInstance().sendMsgToAdmin(errText);
             throw new RuntimeException(e);
         }
 
     }
 
-    static List<String> getUsersList(String team) {
+    static List<String> getUsersList(String teamId, String siteId) {
         List<String> list = new ArrayList<>();
         try {
             Connection connection = getConnection();
@@ -35,7 +38,7 @@ public interface DataBase {
 
             //Выполним запрос
             ResultSet result1 = statement.executeQuery(
-                    "SELECT userID FROM users where team='" + team + "'");
+                    String.format("SELECT userID FROM users where team='%s' and site_id = '%s' ", teamId, siteId));
             while (result1.next()) {
                 list.add(result1.getString("userId"));
             }
@@ -73,7 +76,9 @@ public interface DataBase {
             }
             connection.close();
         } catch (SQLException | URISyntaxException e) {
-            System.out.format("\nОшибка поиска матча %s\nТекст ошибки:%s", matchId, e.getMessage());
+            String errText = String.format("\nОшибка поиска матча %s\nТекст ошибки:%s", matchId, e.getMessage());
+            System.out.format(errText);
+            TelegramBot.getInstance().sendMsgToAdmin(errText);
             throw new RuntimeException(e);
         }
         return match;
@@ -84,7 +89,7 @@ public interface DataBase {
             return executeSQLUpdate(
                     String.format("INSERT INTO " +
                                     "matches(matchID, Tournament, Round, Number, startDateTime, Stadium, teams, count, protokolExist, linkMatch, team_id, site_id) " +
-                                    "values('%s','%s','%s','%s',?,'%s','%s','%s','%s','%s', '%s')",
+                                    "values('%s','%s','%s','%s',?,'%s','%s','%s','%s','%s','%s','%s')",
                             match.getMatchID(),
                             match.getTournament(),
                             match.getRound(),
@@ -97,7 +102,9 @@ public interface DataBase {
                             match.getTeam_id(),
                             match.getSiteID()), new Timestamp(match.getStartDateTime().getTime()));
         } catch (SQLException | URISyntaxException e) {
-            System.out.format("\nОшибка добавления матча %s\nТекст ошибки:%s", match.getMatchID(), e.getMessage());
+            String errText = String.format("\nОшибка добавления матча %s\nТекст ошибки:%s", match.getMatchID(), e.getMessage());
+            System.out.format(errText);
+            TelegramBot.getInstance().sendMsgToAdmin(errText);
             throw new RuntimeException(e);
         }
 
@@ -116,7 +123,7 @@ public interface DataBase {
                                     "count = '%s', " +
                                     "protokolExist = '%s', " +
                                     "linkMatch = '%s', " +
-                                    "team_id = '%s' " +
+                                    "team_id = '%s', " +
                                     "site_id = '%s' " +
                                     "WHERE  matchID = '%s'"
                             , match.getTournament(),
@@ -131,16 +138,21 @@ public interface DataBase {
                             match.getSiteID(),
                             match.getMatchID()), new Timestamp(match.getStartDateTime().getTime()));
         } catch (SQLException | URISyntaxException e) {
-            System.out.format("\nОшибка обновления матча %s\nТекст ошибки:%s", match.getMatchID(), e.getMessage());
+            String errText = String.format("\nОшибка обновления матча %s\nТекст ошибки:%s", match.getMatchID(), e.getMessage());
+            System.out.format(errText);
+            TelegramBot.getInstance().sendMsgToAdmin(errText);
             throw new RuntimeException(e);
         }
 
     }
 
-    static boolean addubscription(String userID, String team_name, String team_id, String site_id) {
+    static boolean addSubscription(String userID, String team_name, String team_id, String site_id) {
         try {
             return executeSQLUpdate(String.format("INSERT INTO subscriptions(userId, team_name, team_id, site_id) values('%s','%s','%s','%s')", userID, team_name, team_id, site_id), null);
         } catch (Exception e) {
+            String errText = String.format("\nОшибка добавления подписки User:%s\nteam_id:%s\nsite_id:%s\nТекст ошибки:%s", userID, team_id, site_id, e.getMessage());
+            System.out.format(errText);
+            TelegramBot.getInstance().sendMsgToAdmin(errText);
             throw new RuntimeException(e);
         }
     }
@@ -149,7 +161,9 @@ public interface DataBase {
         try {
             return executeSQLUpdate("DELETE FROM subscriptions WHERE userID='" + userID + "' and team_id='" + team_id + "'" + "' and site_id='" + site_id + "'", null);
         } catch (SQLException | URISyntaxException e) {
-            System.out.format("\nОшибка удаления подписки User:%s\nteam_id:%s\nsite_id:%s\nТекст ошибки:%s", userID, team_id, site_id, e.getMessage());
+            String errText = String.format("\nОшибка удаления подписки User:%s\nteam_id:%s\nsite_id:%s\nТекст ошибки:%s", userID, team_id, site_id, e.getMessage());
+            System.out.format(errText);
+            TelegramBot.getInstance().sendMsgToAdmin(errText);
             throw new RuntimeException(e);
         }
 
@@ -174,7 +188,6 @@ public interface DataBase {
         return list;
     }
 
-    @SuppressWarnings("unused")
     static boolean createTableMatches() {
         try {
             return executeSQLUpdate("CREATE TABLE " +
@@ -193,7 +206,6 @@ public interface DataBase {
             throw new RuntimeException(e);
         }
     }
-
     static boolean createTableUsers() {
         try {
             return executeSQLUpdate("CREATE TABLE users(userId varchar(40), team varchar(40), FIO varchar(40), telegramLogin varchar(40), PRIMARY KEY(userId))", null);

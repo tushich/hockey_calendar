@@ -139,7 +139,6 @@ public class CalenderGoogle {
             if(!old_event.getSummary().equals(event.getSummary()))
             {
                 needToUpdate = true;
-                // TODO вытащить стадион, в параметр. Т.к. может быть изменен
                 msg_text = String.format("%s\nИзменилось описание. \n%s -> \n%s ", msg_text, old_event.getSummary(), event.getSummary());
             }
             if(needToUpdate)

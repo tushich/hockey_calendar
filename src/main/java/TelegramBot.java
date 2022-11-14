@@ -70,6 +70,10 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    public void sendMsgToAdmin(String s) {
+        sendMsgDirect(admin_chat_id, s);
+    }
+
     /**
      * Метод для приема сообщений.
      * @param update Содержит сообщение от пользователя.

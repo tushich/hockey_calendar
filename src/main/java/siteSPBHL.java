@@ -48,7 +48,6 @@ public interface siteSPBHL {
 
 
         String url = String.format("https://" + siteID + "/Schedule?TeamID=%s", team_id);
-        // TODO Добавить выборку по сайтам. Добавить ФХСПб
 
         List<Match> matchTable = new ArrayList<>();
 
@@ -57,8 +56,9 @@ public interface siteSPBHL {
         try {
             doc = Jsoup.connect(url).get();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.print("Ошибка чтения страницы HTML"); // TODO Отправлять ошибку в телегу админу
+            String errText = String.format("\nОшибка чтения страницы HTML %s\n Текст ошибки:%s", url, e.getMessage());
+            System.out.format(errText);
+            TelegramBot.getInstance().sendMsgToAdmin(errText);
             return matchTable;
         }
 
@@ -75,12 +75,12 @@ public interface siteSPBHL {
                 String matchID = matchElements.get(tournamentCol).attributes().toString();
 
                 // Добавим ссылку на матч
-                match.setLinkMatch("https://spbhl.ru/" + matchID.replace(" href=\"", "")
+                match.setLinkMatch("https://" + siteID + "/" + matchID.replace(" href=\"", "")
                         .replace("\"", "")
                         .replace("&amp;", "&"));
 
-                matchID = matchID.replace(" href=\"Match.aspx?TournamentID=", "");
-                matchID = matchID.replace(" href=\"Match?TournamentID=", "");
+                matchID = matchID.replace(" href=\"Match.aspx?TournamentID=", ""); // спбхл
+                matchID = matchID.replace(" href=\"Match?TournamentID=", ""); // фхспб
                 matchID = matchID.replace("MatchID=", "");
                 matchID = matchID.replace("\"", "");
                 matchID = matchID.replace("&amp;", "v");

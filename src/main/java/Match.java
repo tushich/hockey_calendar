@@ -24,10 +24,10 @@ public class Match {
         {
             dif = dif.concat(String.format("\nИзменился турнир:\n%s -> \n%s", tournament, new_match.getTournament()));
         }
-        if(!round.equals(new_match.getRound()))
+        /*if(!round.equals(new_match.getRound()))
         {
             dif = dif.concat(String.format("\nИзменился раунд:\n%s -> \n%s", round, new_match.getRound()));
-        }
+        }*/
         if(!startDateTime.equals(new_match.getStartDateTime()))
         {
             dif = dif.concat(String.format("\nИзменилась дата и время:\n%s -> \n%s", getDateString(startDateTime), getDateString(new_match.getStartDateTime())));
@@ -42,7 +42,7 @@ public class Match {
         }
         if(!count.equals(new_match.getCount()))
         {
-            dif = dif.concat("\nОбновлен счет: " + new_match.getCount());
+            dif = dif.concat("\nОбновлен счет: *" + new_match.getCount() + "*");
         }
 
         return dif;
