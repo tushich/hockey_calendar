@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface DataBase {
 
+    // TODO не поднимать коннект к базе в каждом запросе. Надо кэшировать
     static boolean addUser(String userID, String FIO, String telegramLogin) {
         try {
             return executeSQLUpdate(String.format("INSERT INTO users(userID, FIO, telegramLogin) values('%s','%s','%s')", userID, FIO, telegramLogin), null);
