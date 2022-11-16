@@ -125,6 +125,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                 } else {
                     sendMsgDirect(update.getMessage().getChatId().toString(), "Ошибка: Неизвестная команда чата", null);
                 }
+                !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        добавить ответ по подписке/отписке
             }
         } else if (update.hasCallbackQuery()) {
             if (update.getCallbackQuery().getData().equals("Подписаться")) {
@@ -135,9 +137,12 @@ public class TelegramBot extends TelegramLongPollingBot {
                                                             "Красные медведи 2009",
                                                             "Красные медведи 2011",
                                                             "Красные медведи 2012")));
+                // TODO Сделать поиск команд для подписки
 
             } else if (update.getCallbackQuery().getData().equals("Отписаться")) {
                 // sendSubscribtions();
+                !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        добавить отсылку команд на отписку.
             }
         }
     }

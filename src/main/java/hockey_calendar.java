@@ -51,6 +51,8 @@ public class hockey_calendar {
 
                     String summary = "*" + match_from_site.getTeams() + "*\n\nСтадион: *" + match_from_site.getStadium() + "*\nТурнир: *" + match_from_site.getTournament() + "*";
 
+                    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            добавить отправку только по подписке!!!
                     try {
                         Match match_from_dataBase = DataBase.getMatch(match_from_site.getMatchID());
                         if (match_from_dataBase.isEmpty()) // Если пустой, то создадим новый матч
