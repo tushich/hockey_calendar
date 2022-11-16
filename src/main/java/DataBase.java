@@ -24,7 +24,7 @@ public interface DataBase {
             return executeSQLUpdate("DELETE FROM users WHERE userID='" + userID, null);
             // TODO Сделать удаление подписок при удалении пользователя
         } catch (SQLException | URISyntaxException e) {
-            String errText = String.format("\nОшибка удаления пользователя: %s\n Команда: %s\nТекст ошибки: %s", userID, e.getMessage());
+            String errText = String.format("\nОшибка удаления пользователя: %s\nТекст ошибки: %s", userID, e.getMessage());
             System.out.format(errText);
             TelegramBot.getInstance().sendMsgToAdmin(errText);
             throw new RuntimeException(e);

@@ -12,7 +12,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private static TelegramBot instance;
     private static final String location = Resources.getResource("location");
-    private static final String admin_chat_id = Resources.getResource("tushich_id_chat");
+    private static final String admin_chat_id = Resources.getResource("admin_chat_id");
 
     public static TelegramBot getInstance() { // #3
         if (instance == null) {        //если объект еще не создан

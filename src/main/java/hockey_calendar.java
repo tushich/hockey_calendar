@@ -1,5 +1,3 @@
-import java.net.URISyntaxException;
-import java.sql.SQLException;
 import java.util.List;
 
 public class hockey_calendar {
@@ -13,12 +11,12 @@ public class hockey_calendar {
         DataBase.createTableSubscriptions();
         */
 
-        // Временные процедурки
         /*
+        // Временные процедурки
         try {
-            DataBase.executeSQLUpdate("UPDATE matches SET Count = '0' WHERE  matchID = '5809v86761'", null);
-        } catch (SQLException | URISyntaxException e) {
-            throw new RuntimeException(e);
+            DataBase.executeSQLUpdate("UPDATE matches SET Count = '0' WHERE  matchID = '5825v90220'", null);
+        } catch (Exception e) {
+            // Ошиболнька
         }
 
         try {
@@ -30,7 +28,6 @@ public class hockey_calendar {
          DataBase.createTableUsers();
          DataBase.createTableMatches();
         */
-
         TelegramBot.getInstance().startListen();
 
         // TODO 0. Сделать подписку на оповещения по командам из чата. Привязку хранить в списке пользователей.
@@ -40,7 +37,7 @@ public class hockey_calendar {
         teamsArray[0] = new ElementMass("fhspb.ru", Resources.getResource("teamIdSpbhl_red_bears_2012"));
         teamsArray[1] = new ElementMass("spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_main"));
         teamsArray[2] = new ElementMass("spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_farm"));
-
+        // TODO при подключении новой команды, не выдавать спам по загрузке матчей.
 
         // TODO 3. Сравнивать состав команд. Могут поменять команду а ID оставить старый т.е. в боте больше матчей чем на сайте
 
