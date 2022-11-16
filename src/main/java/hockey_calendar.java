@@ -24,9 +24,6 @@ public class hockey_calendar {
         } catch (SQLException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
-
-         DataBase.createTableUsers();
-         DataBase.createTableMatches();
         */
         TelegramBot.getInstance().startListen();
 
@@ -34,9 +31,12 @@ public class hockey_calendar {
         // TODO 1. Получать список команд и списка подписок
 
         ElementMass[] teamsArray = new ElementMass[3];
-        teamsArray[0] = new ElementMass("fhspb.ru", Resources.getResource("teamIdSpbhl_red_bears_2012"));
         teamsArray[1] = new ElementMass("spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_main"));
         teamsArray[2] = new ElementMass("spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_farm"));
+        teamsArray[3] = new ElementMass("fhspb.ru", Resources.getResource("team_red_bears_2009"));
+        teamsArray[4] = new ElementMass("fhspb.ru", Resources.getResource("team_red_bears_2011"));
+        teamsArray[5] = new ElementMass("fhspb.ru", Resources.getResource("team_red_bears_2012"));
+
         // TODO при подключении новой команды, не выдавать спам по загрузке матчей.
 
         // TODO 3. Сравнивать состав команд. Могут поменять команду а ID оставить старый т.е. в боте больше матчей чем на сайте
