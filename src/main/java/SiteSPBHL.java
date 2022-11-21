@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface siteSPBHL {
-
+public interface SiteSPBHL {
+// TODO Сделать в интерфейсе разные классы для работы с разными сайтами
     static List<Match> getMatchTable(String team_id, String siteID) {
 
         int startDateCol = 2,

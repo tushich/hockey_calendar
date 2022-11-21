@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class hockey_calendar {
 
@@ -29,61 +31,42 @@ public class hockey_calendar {
 
         // TODO 0. Сделать подписку на оповещения по командам из чата. Привязку хранить в списке пользователей.
         // TODO 1. Получать список команд и списка подписок
-
-        ElementMass[] teamsArray = new ElementMass[3];
-        teamsArray[1] = new ElementMass("spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_main"));
-        teamsArray[2] = new ElementMass("spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_farm"));
-        teamsArray[3] = new ElementMass("fhspb.ru", Resources.getResource("team_red_bears_2009"));
-        teamsArray[4] = new ElementMass("fhspb.ru", Resources.getResource("team_red_bears_2011"));
-        teamsArray[5] = new ElementMass("fhspb.ru", Resources.getResource("team_red_bears_2012"));
-
         // TODO при подключении новой команды, не выдавать спам по загрузке матчей.
-
         // TODO 3. Сравнивать состав команд. Могут поменять команду а ID оставить старый т.е. в боте больше матчей чем на сайте
 
         // CalenderGoogle calender = new CalenderGoogle();
 
-        for (ElementMass elementMass : teamsArray) {
+        Map<String, Team> teams = DataBase.getTeams();
+        for (Map.Entry<String, Team> entry : teams.entrySet()) {
+            Team team = entry.getValue();
+            List<Match> matchTable = SiteSPBHL.getMatchTable(team.teamId, team.siteId);
 
-                List<Match> matchTable = siteSPBHL.getMatchTable(elementMass.teamId, elementMass.siteId);
+            for (Match match_from_site : matchTable) {
 
-                for (Match match_from_site : matchTable) {
-
-                    String summary = "*" + match_from_site.getTeams() + "*\n\nСтадион: *" + match_from_site.getStadium() + "*\nТурнир: *" + match_from_site.getTournament() + "*";
-
-                    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                            добавить отправку только по подписке!!!
-                    try {
-                        Match match_from_dataBase = DataBase.getMatch(match_from_site.getMatchID());
-                        if (match_from_dataBase.isEmpty()) // Если пустой, то создадим новый матч
-                        {
-                            if (!DataBase.addMatch(match_from_site))
-                                continue; // если не добавили, то погнали дальше
-                            TelegramBot.getInstance().sendBroadcastMsg(String.format("Добавлен новый матч:\n%s. \nДата: *%s*\n%s", summary, match_from_site.getStringStartDateTime(), match_from_site.getLinkMatch()), match_from_site.getTeam_id(), match_from_site.getSiteID());
-                        } else // Матч уже есть в базеДанных, значит надо найти различия. Обновить. и Сообщить об обновлении.
-                        {
-                            String diff = match_from_dataBase.compare(match_from_site);
-                            if (!diff.isEmpty()) {
-                                if (!DataBase.updateMatch(match_from_site))
-                                    continue; // не удалось обновить SQL
-                                TelegramBot.getInstance().sendBroadcastMsg(String.format("%s.\n %s\n\n%s", summary, diff, match_from_site.getLinkMatch()), match_from_site.getTeam_id(), match_from_site.getSiteID());
-                            }
+                String summary = "*" + match_from_site.getTeams() + "*\n\nСтадион: *" + match_from_site.getStadium() + "*\nТурнир: *" + match_from_site.getTournament() + "*";
+                try {
+                    Match match_from_dataBase = DataBase.getMatch(match_from_site.getMatchID());
+                    if (match_from_dataBase.isEmpty()) // Если пустой, то создадим новый матч
+                    {
+                        if (!DataBase.addMatch(match_from_site))
+                            continue; // если не добавили, то погнали дальше
+                        TelegramBot.getInstance().sendBroadcastMsg(String.format("Добавлен новый матч:\n%s. \nДата: *%s*\n%s", summary, match_from_site.getStringStartDateTime(), match_from_site.getLinkMatch()), match_from_site.getTeam_id(), match_from_site.getSiteID());
+                    } else // Матч уже есть в базеДанных, значит надо найти различия. Обновить. и Сообщить об обновлении.
+                    {
+                        String diff = match_from_dataBase.compare(match_from_site);
+                        if (!diff.isEmpty()) {
+                            if (!DataBase.updateMatch(match_from_site))
+                                continue; // не удалось обновить SQL
+                            TelegramBot.getInstance().sendBroadcastMsg(String.format("%s.\n %s\n\n%s", summary, diff, match_from_site.getLinkMatch()), match_from_site.getTeam_id(), match_from_site.getSiteID());
                         }
-                    } catch (Exception e) {
-                        String errText = String.format("\nНе удалось обработать матч %s\n Summary:%s\n Ошибка:%s", match_from_site.getLinkMatch(), summary, e.getMessage());
-                        System.out.format(errText);
-                        TelegramBot.getInstance().sendMsgToAdmin(errText);
                     }
+                } catch (Exception e) {
+                    String errText = String.format("\nНе удалось обработать матч %s\n Summary:%s\n Ошибка:%s", match_from_site.getLinkMatch(), summary, e.getMessage());
+                    System.out.format(errText);
+                    TelegramBot.getInstance().sendMsgToAdmin(errText);
                 }
             }
         }
-    }
-
-class ElementMass {
-    public String teamId, siteId;
-    public ElementMass(String siteId, String teamId) {
-        this.siteId = siteId;
-        this.teamId = teamId;
     }
 }
 

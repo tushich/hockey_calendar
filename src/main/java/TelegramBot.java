@@ -4,6 +4,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
@@ -13,6 +14,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class TelegramBot extends TelegramLongPollingBot {
 
@@ -42,7 +44,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      *
      * @param message Строка, которую необходимот отправить в качестве сообщения.
      */
-    public synchronized void sendBroadcastMsg(String message, String team_id, String site_id) {
+    public void sendBroadcastMsg(String message, String team_id, String site_id) {
 
         if (location.equals("prod")) {
             List<String> list = DataBase.getUsersListSubscribedForTeam(team_id, site_id);
@@ -61,7 +63,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param chatId id чата
      * @param s      Строка, которую необходимот отправить в качестве сообщения.
      */
-    public synchronized void sendMsgDirect(String chatId, String s, ReplyKeyboardMarkup buttons) {
+    public void sendMsgDirect(String chatId, String s, ReplyKeyboard buttons) {
         if (location.equals("test")) {
             chatId = admin_chat_id;
         }
@@ -71,10 +73,10 @@ public class TelegramBot extends TelegramLongPollingBot {
             sendMessage.setReplyMarkup(buttons);
         sendMessage.setChatId(chatId);
 
-        s = s
-                .replace("_", "\\_")
+        s = s.replace("_", "\\_")
                 .replace("[", "\\[")
                 .replace("`", "\\`");
+
         sendMessage.setText(s);
         try {
             execute(sendMessage);
@@ -108,7 +110,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 "\nПри изменениях на сайтах, вы автоматически получите оповещение." +
                                 "\nЧтобы прекратить получать сообщения введите '/stop'";
                         // "\nКалендарь всех игр находится тут: https://calendar.google.com/calendar/u/0?cid=OW9waHNjamMwMHNzb25qNG80a2QxdGYwYThAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ"
-                        sendMsgDirect(update.getMessage().getChatId().toString(), msg, getSettingsKeyboard(Arrays.asList("Подписаться", "Отписаться")));
+                        sendMsgDirect(update.getMessage().getChatId().toString(), msg, getKeyboardForChat(Arrays.asList("Подписаться", "Отписаться")));
 
                     } else {
                         msg = "Произошла ошибка. Не удалось добавить пользователя.";
@@ -118,36 +120,57 @@ public class TelegramBot extends TelegramLongPollingBot {
                 } else if (message.getText().equals("/stop")) {
                     boolean allIsOk = DataBase.delUser(update.getMessage().getChatId().toString());
                     String msg;
-                    if (allIsOk) msg = "Пока и жаль! Чтобы начать общение заново, необходимо написать '/start'";
+                    if (allIsOk) msg = "Пока и жаль! \nВаши подписки очищены. \nЧтобы начать общение заново, необходимо написать '/start'";
                     else msg = "Произошла ошибка. Не удалось удалить пользователя.";
                     sendMsgDirect(update.getMessage().getChatId().toString(), msg, null);
+                    // TODO Удалять подписки пользователя при отписке
 
-                } else {
+                } else if (message.getText().equals("Подписаться")) {
+                    sendMsgDirect(update.getMessage().getChatId().toString(),
+                            "Выберите команду для *Подписки*:",
+                            getInlineKeyboard(DataBase.getTeams(), "Подписаться"));
+                    // TODO Сделать поиск команд для подписки. Т.е. пользователь вводит название и их ищем на сайте
+                    // TODO Добавить шаг выбора сайта
+
+                } else if (message.getText().equals("Отписаться")) {
+                    sendMsgDirect(update.getMessage().getChatId().toString(),
+                            "Выберите команду для *Отписки*:",
+                            getInlineKeyboard(DataBase.getTeams(), "Отписаться"));
+                    // TODO Брать список для отписки из БД
+                }
+                else {
                     sendMsgDirect(update.getMessage().getChatId().toString(), "Ошибка: Неизвестная команда чата", null);
                 }
-                !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        добавить ответ по подписке/отписке
             }
         } else if (update.hasCallbackQuery()) {
             if (update.getCallbackQuery().getData().equals("Подписаться")) {
-                sendMsgDirect(update.getMessage().getChatId().toString(),
-                        "Выберите команду",
-                        getSettingsKeyboard(Arrays.asList("Красные медведи ВЗР",
-                                                            "Красные медведи ВЗР Фарм",
-                                                            "Красные медведи 2009",
-                                                            "Красные медведи 2011",
-                                                            "Красные медведи 2012")));
-                // TODO Сделать поиск команд для подписки
-
+                Team team = DataBase.getTeams().get(update.getCallbackQuery().getMessage());
+                DataBase.addSubscription(update.getCallbackQuery().getMessage().getChatId().toString(), team.teamId, team.siteId);
             } else if (update.getCallbackQuery().getData().equals("Отписаться")) {
-                // sendSubscribtions();
-                !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        добавить отсылку команд на отписку.
+                Team team = DataBase.getTeams().get(update.getCallbackQuery().getMessage());
+                DataBase.delSubscription(update.getCallbackQuery().getMessage().getChatId().toString(), team.teamId, team.siteId);
             }
         }
     }
 
-    private static ReplyKeyboardMarkup getSettingsKeyboard(List<String> buttons)
+    private InlineKeyboardMarkup getInlineKeyboard(Map<String,Team> teams, String callBackText) {
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        for(Map.Entry<String, Team> team : teams.entrySet()){
+            List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
+            InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
+            inlineKeyboardButton.setText(team.getKey());
+            inlineKeyboardButton.setCallbackData(callBackText);
+            keyboardButtonsRow.add(inlineKeyboardButton);
+            rowList.add(keyboardButtonsRow);
+        }
+
+        inlineKeyboardMarkup.setKeyboard(rowList);
+        return inlineKeyboardMarkup;
+    }
+
+    private static ReplyKeyboardMarkup getKeyboardForChat(List<String> buttons)
     {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);
@@ -156,9 +179,9 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         List<KeyboardRow> keyboard = new ArrayList<>();
         for (String button : buttons) {
-            KeyboardRow keyboardFirstRow = new KeyboardRow();
-            keyboardFirstRow.add(button);
-            keyboard.add(keyboardFirstRow);
+            KeyboardRow keyboardRow = new KeyboardRow();
+            keyboardRow.add(button);
+            keyboard.add(keyboardRow);
         }
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;

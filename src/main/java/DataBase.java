@@ -1,9 +1,8 @@
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
 
 public interface DataBase {
 
@@ -21,7 +20,7 @@ public interface DataBase {
 
     static boolean delUser(String userID) {
         try {
-            return executeSQLUpdate("DELETE FROM users WHERE userID='" + userID, null);
+            return executeSQLUpdate(String.format("DELETE FROM users WHERE userID='%s'", userID), null);
             // TODO Сделать удаление подписок при удалении пользователя
         } catch (SQLException | URISyntaxException e) {
             String errText = String.format("\nОшибка удаления пользователя: %s\nТекст ошибки: %s", userID, e.getMessage());
@@ -219,7 +218,7 @@ public interface DataBase {
     }
     static boolean createTableSubscriptions() {
         try {
-            return executeSQLUpdate("CREATE TABLE Subscriptions(userId varchar(40), team_id varchar(40), site_id varchar(40))", null);
+            return executeSQLUpdate("CREATE TABLE Subscriptions(userId varchar(40), team_name varchar(40), team_id varchar(40), site_id varchar(40))", null);
         } catch (SQLException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -244,5 +243,16 @@ public interface DataBase {
         String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath() + "?sslmode=require";
 
         return DriverManager.getConnection(dbUrl, username, password);
+    }
+
+    static Map<String,Team> getTeams(){
+        // TODO Сделать поиск команд из базы или с сайта
+        Map<String,Team> teams = new HashMap<>();
+        teams.put("Красные медведи ВЗР", new Team("Красные медведи ВЗР",       "spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_main")));
+        teams.put("Красные медведи ВЗР Фарм", new Team("Красные медведи ВЗР Фарм",  "spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_farm")));
+        teams.put("Красные медведи 2009", new Team("Красные медведи 2009",      "fhspb.ru", Resources.getResource("team_red_bears_2009")));
+        teams.put("Красные медведи 2011", new Team("Красные медведи 2011",      "fhspb.ru", Resources.getResource("team_red_bears_2011")));
+        teams.put("Красные медведи 2012", new Team("Красные медведи 2012",      "fhspb.ru", Resources.getResource("team_red_bears_2012")));
+        return teams;
     }
 }
