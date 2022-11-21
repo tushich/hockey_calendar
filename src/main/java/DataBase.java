@@ -20,6 +20,7 @@ public interface DataBase {
 
     static boolean delUser(String userID) {
         try {
+            executeSQLUpdate(String.format("DELETE FROM subscriptions WHERE userID='%s'", userID), null);
             return executeSQLUpdate(String.format("DELETE FROM users WHERE userID='%s'", userID), null);
             // TODO Сделать удаление подписок при удалении пользователя
         } catch (SQLException | URISyntaxException e) {
@@ -31,23 +32,25 @@ public interface DataBase {
 
     }
 
-    static List<String> getUsersList(String teamId, String siteId) {
-        List<String> list = new ArrayList<>();
+    static Map<String,Team> getUserSubscription(String userId) {
+        Map<String,Team> teams = new HashMap<>();
         try {
             Connection connection = getConnection();
             Statement statement = connection.createStatement();
 
             //Выполним запрос
             ResultSet result1 = statement.executeQuery(
-                    String.format("SELECT userID FROM users where team='%s' and site_id = '%s' ", teamId, siteId));
+                    String.format("SELECT team_id, team_name, site_id FROM subscriptions where userId='%s'", userId));
             while (result1.next()) {
-                list.add(result1.getString("userId"));
+                teams.put(result1.getString("team_name"), new Team(result1.getString("team_name"), result1.getString("site_id"), result1.getString("team_id")));
             }
             connection.close();
         } catch (SQLException | URISyntaxException e) {
-            e.printStackTrace();
+            String errText = String.format("\nОшибка получения списка подписок userId:%s\nТекст ошибки:%s", userId, e.getMessage());
+            System.out.format(errText);
+            TelegramBot.getInstance().sendMsgToAdmin(errText);
         }
-        return list;
+        return teams;
     }
 
     static Match getMatch(String matchId) {
@@ -147,9 +150,9 @@ public interface DataBase {
 
     }
 
-    static boolean addSubscription(String userID, String team_id, String site_id) {
+    static boolean addSubscription(String userID, String teamName, String team_id, String site_id) {
         try {
-            return executeSQLUpdate(String.format("INSERT INTO subscriptions(userId, team_id, site_id) values('%s','%s','%s')", userID, team_id, site_id), null);
+            return executeSQLUpdate(String.format("INSERT INTO subscriptions(userid, team_name, team_id, site_id) values('%s','%s','%s','%s')", userID, teamName, team_id, site_id), null);
         } catch (Exception e) {
             String errText = String.format("\nОшибка добавления подписки User:%s\nteam_id:%s\nsite_id:%s\nТекст ошибки:%s", userID, team_id, site_id, e.getMessage());
             System.out.format(errText);
@@ -160,7 +163,7 @@ public interface DataBase {
 
     static boolean delSubscription(String userID, String team_id, String site_id) {
         try {
-            return executeSQLUpdate("DELETE FROM subscriptions WHERE userID='" + userID + "' and team_id='" + team_id + "'" + "' and site_id='" + site_id + "'", null);
+            return executeSQLUpdate(String.format("DELETE FROM subscriptions WHERE userID='%s' and team_id='%s' and site_id='%s'", userID, team_id, site_id), null);
         } catch (SQLException | URISyntaxException e) {
             String errText = String.format("\nОшибка удаления подписки User:%s\nteam_id:%s\nsite_id:%s\nТекст ошибки:%s", userID, team_id, site_id, e.getMessage());
             System.out.format(errText);
@@ -178,7 +181,7 @@ public interface DataBase {
 
             //Выполним запрос
             ResultSet result1 = statement.executeQuery(
-                    "SELECT userid FROM Subscriptions where team_id='" + team_id + "'" + " and site_id=" + site_id);
+                    String.format("SELECT userid FROM subscriptions where team_id='%s' and site_id='%s'", team_id, site_id));
             while (result1.next()) {
                 list.add(result1.getString("userid"));
             }

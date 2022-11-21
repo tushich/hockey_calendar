@@ -92,6 +92,7 @@ public interface SiteSPBHL {
             time = time.replace("--:--","00:00");
 
             match.setStartDateTime(cols.get(startDateCol).text(), time);
+            // TODO ПРотокол проверять по другому, сейчас посчитал что протокол это видеозапись матча ПримерСВидео:https://spbhl.ru/Match?TournamentID=5825&MatchID=90219
             match.setProtokolExist((cols.get(protokolExistCol).select("a").size()) > 0);
             match.setTournament(cols.get(tournamentCol).text());
             // Не используем

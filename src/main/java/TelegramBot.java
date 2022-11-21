@@ -101,7 +101,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
                 Message message = update.getMessage();
                 if (message.getText().equals("/start")) {
-                    // TODO добавить запись подписки в таблицу подписок
                     boolean allIsOk = DataBase.addUser(message.getChatId().toString(), message.getFrom().getFirstName() + " " + message.getFrom().getLastName(), message.getFrom().getUserName());
                     String msg;
                     if (allIsOk) {
@@ -129,26 +128,41 @@ public class TelegramBot extends TelegramLongPollingBot {
                     sendMsgDirect(update.getMessage().getChatId().toString(),
                             "Выберите команду для *Подписки*:",
                             getInlineKeyboard(DataBase.getTeams(), "Подписаться"));
+
                     // TODO Сделать поиск команд для подписки. Т.е. пользователь вводит название и их ищем на сайте
                     // TODO Добавить шаг выбора сайта
 
                 } else if (message.getText().equals("Отписаться")) {
-                    sendMsgDirect(update.getMessage().getChatId().toString(),
-                            "Выберите команду для *Отписки*:",
-                            getInlineKeyboard(DataBase.getTeams(), "Отписаться"));
-                    // TODO Брать список для отписки из БД
+                    Map<String, Team> subscriptions = DataBase.getUserSubscription(update.getMessage().getChatId().toString());
+                    if(subscriptions.isEmpty()) {
+                        sendMsgDirect(update.getMessage().getChatId().toString(), "У вас нету активных подписок", null);
+                    }
+                    else {
+                        sendMsgDirect(update.getMessage().getChatId().toString(), "Выберите команду для *Отписки*:", getInlineKeyboard(subscriptions, "Отписаться"));
+                    }
                 }
                 else {
                     sendMsgDirect(update.getMessage().getChatId().toString(), "Ошибка: Неизвестная команда чата", null);
                 }
             }
         } else if (update.hasCallbackQuery()) {
-            if (update.getCallbackQuery().getData().equals("Подписаться")) {
-                Team team = DataBase.getTeams().get(update.getCallbackQuery().getMessage());
-                DataBase.addSubscription(update.getCallbackQuery().getMessage().getChatId().toString(), team.teamId, team.siteId);
-            } else if (update.getCallbackQuery().getData().equals("Отписаться")) {
-                Team team = DataBase.getTeams().get(update.getCallbackQuery().getMessage());
-                DataBase.delSubscription(update.getCallbackQuery().getMessage().getChatId().toString(), team.teamId, team.siteId);
+            if (update.getCallbackQuery().getMessage().getText().equals("Выберите команду для Подписки:")) {
+
+                Team team = DataBase.getTeams().get(update.getCallbackQuery().getData());
+                boolean allIsOk = DataBase.addSubscription(update.getCallbackQuery().getMessage().getChatId().toString(), team.name, team.teamId, team.siteId);
+                String msg;
+                if (allIsOk) msg = String.format("Подписка на команду *'%s'* добавлена", team.name);
+                else msg = "Произошла ошибка. Не удалось установить подписку.";
+                sendMsgDirect(update.getCallbackQuery().getMessage().getChatId().toString(), msg, null);
+
+            } else if (update.getCallbackQuery().getMessage().getText().equals("Выберите команду для Отписки:")) {
+
+                Team team = DataBase.getTeams().get(update.getCallbackQuery().getData());
+                boolean allIsOk = DataBase.delSubscription(update.getCallbackQuery().getMessage().getChatId().toString(), team.teamId, team.siteId);
+                String msg;
+                if (allIsOk) msg = String.format("Вы отписаны от команды *'%s'*", team.name);
+                else msg = "Произошла ошибка. Не удалось удалить подписку.";
+                sendMsgDirect(update.getCallbackQuery().getMessage().getChatId().toString(), msg, null);
             }
         }
     }
@@ -161,7 +175,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
             InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
             inlineKeyboardButton.setText(team.getKey());
-            inlineKeyboardButton.setCallbackData(callBackText);
+            inlineKeyboardButton.setCallbackData(team.getKey());
             keyboardButtonsRow.add(inlineKeyboardButton);
             rowList.add(keyboardButtonsRow);
         }
