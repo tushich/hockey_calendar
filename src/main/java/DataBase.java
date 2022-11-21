@@ -239,7 +239,7 @@ public interface DataBase {
     }
 
     static Connection getConnection() throws URISyntaxException, SQLException {
-        URI dbUri = new URI(Resources.getResource("DATABASE_URL"));
+        URI dbUri = new URI(Resources.getResource("DATABASE_URL2"));
 
         String username = dbUri.getUserInfo().split(":")[0];
         String password = dbUri.getUserInfo().split(":")[1];
