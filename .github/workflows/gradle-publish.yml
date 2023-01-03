@@ -35,10 +35,14 @@ jobs:
       with:
         arguments: build
 
-    - uses: actions/upload-artifact@v3
-      with:
-        name: my-artifact
-        path: ./build/libs
+    - name: copy file via ssh password
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "build/libs/*.jar"
+          target: "/etc/hockey_calendar/build"
 
     #- name: Deploy Java APP
     #  run: rsync -zvra "ssh -i ${{secrets.SSH_KEY}} -o StrictHostKeyChecking=no" build/lib/* root@10.114.0.2:/etc/hockey_calendar/build
