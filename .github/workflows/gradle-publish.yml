@@ -45,7 +45,7 @@ jobs:
       with:
         host: 10.114.0.2
         port: 22
-        #timeout: 60
+        timeout: 60s
         username: root
         password: ${{secrets.SSH_PASS}}
         #key: ${{secrets.SSH_KEY}}
