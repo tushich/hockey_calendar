@@ -36,6 +36,7 @@ jobs:
         arguments: build
 
     - name: Deploy Java APP
+        uses: actions/checkout@v2
         run: rsync -e "ssh -i ${{secrets.SSH_KEY}} -o StrictHostKeyChecking=no" --archive --compress --delete . ${{secrets.SSH_USERNAME}}@${{secrets.SSH_HOST}}:/etc/hockey_calendar
 
 
