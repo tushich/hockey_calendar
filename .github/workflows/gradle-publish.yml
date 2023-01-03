@@ -47,7 +47,8 @@ jobs:
         port: 22
         timeout: 60
         username: root
-        key: ${{secrets.SSH_KEY}}
+        password: ${{secrets.SSH_PASS}}
+        #key: ${{secrets.SSH_KEY}}
         source: "./build/libs/*.jar"
         target: "/etc/hockey_calendar/build"
 
