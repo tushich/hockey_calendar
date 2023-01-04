@@ -2,6 +2,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 public interface Resources {
@@ -12,7 +13,8 @@ public interface Resources {
             Properties prop = new Properties();
             InputStream fis = null;
             try {
-                fis = new FileInputStream("src/main/resources/credential.prop");
+                URL credUrl = Resources.class.getClassLoader().getResource("credential.prop");// "src/main/resources/credential.prop"
+                fis = new FileInputStream(credUrl.getPath());
                 prop.load(fis);
                 resource = prop.getProperty(name);
             } catch (FileNotFoundException e) {

@@ -12,6 +12,7 @@ compileTestJava.options.encoding = 'UTF-8'
 
     repositories {
         mavenCentral()
+        mavenLocal()
     }
 
     dependencies {
@@ -24,7 +25,6 @@ compileTestJava.options.encoding = 'UTF-8'
         compile 'org.telegram:telegrambots:6.0.1'
     }
 
-
 jar {
     manifest {
         attributes(
@@ -34,15 +34,14 @@ jar {
     }
 }
 
-task stage(dependsOn: ['build', 'clean'])
-build.mustRunAfter clean
-
+task stage(dependsOn: ['build', 'clean']){
+    build.mustRunAfter clean
+}
 
 task copyToLib(type: Copy) {
     into "$buildDir/libs"
-    from(configurations.compile)
+    from(configurations.runtime)
 }
-stage.dependsOn(copyToLib)
-
+build.dependsOn copyToLib
 
 // https://devcenter.heroku.com/articles/deploying-gradle-apps-on-heroku
