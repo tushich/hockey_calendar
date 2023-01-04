@@ -50,7 +50,7 @@ jobs:
         #password: ${{secrets.SSH_PASS}}
         key: ${{secrets.SSH_KEY}}
         source: "./build, !./build/distributions"
-        target: "/etc/hockey_calendar/build"
+        target: "/hockey_calendar/"
 
 
 
