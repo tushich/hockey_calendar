@@ -13,8 +13,10 @@ public interface Resources {
             Properties prop = new Properties();
             InputStream fis = null;
             try {
-                URL credUrl = Resources.class.getClassLoader().getResource("credential.prop");// "src/main/resources/credential.prop"
-                fis = new FileInputStream(credUrl.getPath());
+                /*URL credUrl = Resources.class.getClassLoader().getResource("credential.prop");// "src/main/resources/credential.prop"
+                System.out.println(credUrl.getPath());
+                fis = new FileInputStream(credUrl.getPath());*/
+                fis = new FileInputStream("credential.prop");
                 prop.load(fis);
                 resource = prop.getProperty(name);
             } catch (FileNotFoundException e) {
