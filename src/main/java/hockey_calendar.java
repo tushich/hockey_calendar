@@ -62,6 +62,8 @@ public class hockey_calendar {
                     String errText = String.format("\nНе удалось обработать матч %s\n Summary:%s\n Ошибка:%s", match_from_site.getLinkMatch(), summary, e.getMessage());
                     System.out.format(errText);
                     TelegramBot.getInstance().sendMsgToAdmin(errText);
+                    return; // закончим работать, т.к. скорее всего есть проблема с подключениями
+                    // TODO Сделать обработку ошибки подключения к SQL
                 }
             }
         }
