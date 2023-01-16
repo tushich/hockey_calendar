@@ -6,7 +6,8 @@ import java.util.Date;
 
 public interface DataBase {
 
-    // TODO не поднимать коннект к базе в каждом запросе. Надо кэшировать
+    String DATABASE_URL = Resources.getResource("DATABASE_URL2");
+
     static boolean addUser(String userID, String FIO, String telegramLogin) {
         try {
             return executeSQLUpdate(String.format("INSERT INTO users(userID, FIO, telegramLogin) values('%s','%s','%s')", userID, FIO, telegramLogin), null);
@@ -22,7 +23,7 @@ public interface DataBase {
         try {
             executeSQLUpdate(String.format("DELETE FROM subscriptions WHERE userID='%s'", userID), null);
             return executeSQLUpdate(String.format("DELETE FROM users WHERE userID='%s'", userID), null);
-            // TODO Сделать удаление подписок при удалении пользователя
+            // TODO Сделать удаление подписок и пользователя как единую транзакцию
         } catch (SQLException | URISyntaxException e) {
             String errText = String.format("\nОшибка удаления пользователя: %s\nТекст ошибки: %s", userID, e.getMessage());
             System.out.format(errText);
@@ -239,23 +240,21 @@ public interface DataBase {
     }
 
     static Connection getConnection() throws URISyntaxException, SQLException {
-        URI dbUri = new URI(Resources.getResource("DATABASE_URL2"));
-
+        URI dbUri = new URI(DATABASE_URL);
         String username = dbUri.getUserInfo().split(":")[0];
         String password = dbUri.getUserInfo().split(":")[1];
         String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath() + "?sslmode=require";
-
         return DriverManager.getConnection(dbUrl, username, password);
     }
 
     static Map<String,Team> getTeams(){
         // TODO Сделать поиск команд из базы или с сайта
         Map<String,Team> teams = new HashMap<>();
-        teams.put("Красные медведи ВЗР", new Team("Красные медведи ВЗР",       "spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_main")));
-        teams.put("Красные медведи ВЗР Фарм", new Team("Красные медведи ВЗР Фарм",  "spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_farm")));
-        teams.put("Красные медведи 2009", new Team("Красные медведи 2009",      "fhspb.ru", Resources.getResource("team_red_bears_2009")));
-        teams.put("Красные медведи 2011", new Team("Красные медведи 2011",      "fhspb.ru", Resources.getResource("team_red_bears_2011")));
-        teams.put("Красные медведи 2012", new Team("Красные медведи 2012",      "fhspb.ru", Resources.getResource("team_red_bears_2012")));
+        teams.put("Красные медведи ВЗР",        new Team("Красные медведи ВЗР",       "spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_main")));
+        teams.put("Красные медведи ВЗР Фарм",   new Team("Красные медведи ВЗР Фарм",  "spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_farm")));
+        teams.put("Красные медведи 2009",       new Team("Красные медведи 2009",      "fhspb.ru", Resources.getResource("team_red_bears_2009")));
+        teams.put("Красные медведи 2011",       new Team("Красные медведи 2011",      "fhspb.ru", Resources.getResource("team_red_bears_2011")));
+        teams.put("Красные медведи 2012",       new Team("Красные медведи 2012",      "fhspb.ru", Resources.getResource("team_red_bears_2012")));
         return teams;
     }
 }

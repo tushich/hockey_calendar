@@ -122,7 +122,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                     if (allIsOk) msg = "Пока и жаль! \nВаши подписки очищены. \nЧтобы начать общение заново, необходимо написать '/start'";
                     else msg = "Произошла ошибка. Не удалось удалить пользователя.";
                     sendMsgDirect(update.getMessage().getChatId().toString(), msg, null);
-                    // TODO Удалять подписки пользователя при отписке
 
                 } else if (message.getText().equals("Подписаться")) {
                     sendMsgDirect(update.getMessage().getChatId().toString(),
