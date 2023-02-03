@@ -29,10 +29,12 @@ public class hockey_calendar {
         */
         TelegramBot.getInstance().startListen();
 
+
         // TODO при подключении новой команды, не выдавать спам по загрузке матчей.
         // TODO 3. Сравнивать состав команд. Могут поменять команду а ID оставить старый т.е. в боте больше матчей чем на сайте
 
         // CalenderGoogle calender = new CalenderGoogle();
+
 
         Map<String, Team> teams = DataBase.getTeams();
         for (Map.Entry<String, Team> entry : teams.entrySet()) {

@@ -153,7 +153,11 @@ public interface DataBase {
 
     static boolean addSubscription(String userID, String teamName, String team_id, String site_id) {
         try {
-            return executeSQLUpdate(String.format("INSERT INTO subscriptions(userid, team_name, team_id, site_id) values('%s','%s','%s','%s')", userID, teamName, team_id, site_id), null);
+            Map<String, Team> subscriptions = getUserSubscription(userID);
+            if(subscriptions.get(teamName) == null)
+                return executeSQLUpdate(String.format("INSERT INTO subscriptions(userid, team_name, team_id, site_id) values('%s','%s','%s','%s')", userID, teamName, team_id, site_id), null);
+            else
+                return true;
         } catch (Exception e) {
             String errText = String.format("\nОшибка добавления подписки User:%s\nteam_id:%s\nsite_id:%s\nТекст ошибки:%s", userID, team_id, site_id, e.getMessage());
             System.out.format(errText);

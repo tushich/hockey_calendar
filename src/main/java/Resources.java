@@ -13,7 +13,7 @@ public interface Resources {
             Properties prop = new Properties();
             InputStream fis = null;
             try {
-                URL credUrl = Resources.class.getClassLoader().getResource("credential.prop");// "src/main/resources/credential.prop"
+                URL credUrl = Resources.class.getClassLoader().getResource("credential.prop");
                 fis = new FileInputStream(credUrl.getPath());
                 prop.load(fis);
                 resource = prop.getProperty(name);
