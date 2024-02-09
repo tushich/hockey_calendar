@@ -32,7 +32,7 @@ public class hockey_calendar {
             throw new RuntimeException(e);
         }
         */
-        // TelegramBot.getInstance().startListen();
+        TelegramBot.getInstance().startListen();
 
 
         // TODO при подключении новой команды, не выдавать спам по загрузке матчей.
