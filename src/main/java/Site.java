@@ -176,7 +176,7 @@ public interface Site {
                 match.setTeams(row.select("div.team").get(0).text() + " - " + row.select("div.team").get(1).text());
 
                 String count = row.select("div.points").text();
-                // match.setProtokolExist(count.equals(":")); // протокол добавляют сразу
+                match.setProtokolExist(false); // протокол добавляют сразу
                 match.setCount(count);
                 match.setTeam_id(team_id);
                 match.setSiteID(siteID);
