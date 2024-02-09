@@ -53,7 +53,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
         } else // если шлёт в тесте, то отправялть админу 1 раз
         {
-            sendMsgDirect(admin_chat_id, message, null);
+           sendMsgDirect(admin_chat_id, message, null);
         }
     }
 

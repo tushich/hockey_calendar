@@ -200,7 +200,7 @@ public interface DataBase {
     static boolean createTableMatches() {
         try {
             return executeSQLUpdate("CREATE TABLE " +
-                    "matches(matchID varchar(20), " +
+                    "matches(matchID varchar(40), " +
                     "Tournament varchar(100), " +
                     "Round varchar(100), " +
                     "Number varchar(10), " +
@@ -254,8 +254,11 @@ public interface DataBase {
     static Map<String,Team> getTeams(){
         // TODO Сделать поиск команд из базы или с сайта
         Map<String,Team> teams = new HashMap<>();
-        teams.put("Красные медведи ВЗР",        new Team("Красные медведи ВЗР",       "spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_main")));
-        teams.put("Красные медведи ВЗР Фарм",   new Team("Красные медведи ВЗР Фарм",  "spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_farm")));
+        // teams.put("Красные медведи ВЗР СПБХЛ",        new Team("Красные медведи ВЗР СПБХЛ",       "spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_main")));
+        // teams.put("Красные медведи ВЗР Фарм СПБХЛ",   new Team("Красные медведи ВЗР Фарм СПБХЛ",  "spbhl.ru", Resources.getResource("teamIdSpbhl_red_bears_farm")));
+        teams.put("Красные медведи ВЗР РХЛ",        new Team("Красные медведи ВЗР РХЛ",       "rhlspb.ru", Resources.getResource("teamIdRhl_red_bears_main")));
+        teams.put("Красные медведи ВЗР Фарм РХЛ",   new Team("Красные медведи ВЗР Фарм РХЛ",  "rhlspb.ru", Resources.getResource("teamIdRhl_red_bears_farm")));
+
         teams.put("Красные медведи 2009",       new Team("Красные медведи 2009",      "fhspb.ru", Resources.getResource("team_red_bears_2009")));
         teams.put("Красные медведи 2011",       new Team("Красные медведи 2011",      "fhspb.ru", Resources.getResource("team_red_bears_2011")));
         teams.put("Красные медведи 2012",       new Team("Красные медведи 2012",      "fhspb.ru", Resources.getResource("team_red_bears_2012")));

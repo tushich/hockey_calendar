@@ -5,6 +5,11 @@ public class hockey_calendar {
 
     public static void main(String[] args) {
 
+        // Удалить. Только для отладки
+        // List<Match> matchTable2 = Site.getMatchTable("0f814f7cc4e7cb945ec935e76cbaa43c/Санкт-Петербург/Сезон_2023-2024/4-й_Дивизион/", "rhlspb.ru");
+        // КонецУдаления
+
+
         // Процедуры первоначального заполнения. Запускать при первом запуске в окружении
         /*
         DataBase.createTableMatches();
@@ -27,7 +32,7 @@ public class hockey_calendar {
             throw new RuntimeException(e);
         }
         */
-        TelegramBot.getInstance().startListen();
+        // TelegramBot.getInstance().startListen();
 
 
         // TODO при подключении новой команды, не выдавать спам по загрузке матчей.
@@ -35,11 +40,10 @@ public class hockey_calendar {
 
         // CalenderGoogle calender = new CalenderGoogle();
 
-
         Map<String, Team> teams = DataBase.getTeams();
         for (Map.Entry<String, Team> entry : teams.entrySet()) {
             Team team = entry.getValue();
-            List<Match> matchTable = SiteSPBHL.getMatchTable(team.teamId, team.siteId);
+            List<Match> matchTable = Site.getMatchTable(team.teamId, team.siteId);
 
             for (Match match_from_site : matchTable) {
 

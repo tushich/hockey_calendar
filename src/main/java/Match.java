@@ -70,7 +70,6 @@ public class Match {
     }
 
     public void setStartDateTime(String date, String time) {
-        date = date.substring(9, 13) + "." + date.substring(6, 8) + "." + date.substring(3, 5);
         DateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.ENGLISH);
         try {
             this.startDateTime  = format.parse(date + " " + time);
