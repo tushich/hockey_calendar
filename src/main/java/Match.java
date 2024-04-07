@@ -69,10 +69,10 @@ public class Match {
     }
 
     public void setStartDateTime(String date, String time) {
-        DateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm Z", Locale.ENGLISH);
+        DateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.ENGLISH);
 
         try {
-            this.startDateTime  = format.parse(date + " " + time + " +0300"); // храним часовой пояс по гринфвичу
+            this.startDateTime  = format.parse(date + " " + time); // храним часовой пояс по гринфвичу
         } catch (ParseException e) {
             System.out.format("\nОшибка установки даты начала для Матча %s\nТекст ошибки:%s", this.matchID, e.getMessage());
             throw new RuntimeException(e);
@@ -148,7 +148,7 @@ public class Match {
 
     private String getDateString(Date dt)
     {
-        DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm Z");
+        DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         return df.format(dt);
     }
 
