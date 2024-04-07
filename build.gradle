@@ -16,19 +16,19 @@ compileTestJava.options.encoding = 'UTF-8'
     }
 
     dependencies {
-        compile 'com.google.auth:google-auth-library-oauth2-http:1.6.0'
-        compile 'com.google.api-client:google-api-client:1.34.1'
-        compile 'com.google.apis:google-api-services-calendar:v3-rev20220422-1.32.1'
-        compile 'org.jsoup:jsoup:1.14.3'
-        compile 'org.postgresql:postgresql:42.3.4'
-        compile 'org.slf4j:slf4j-simple:1.7.36'
-        compile 'org.telegram:telegrambots:6.0.1'
+        implementation 'com.google.auth:google-auth-library-oauth2-http:1.23.0'
+        implementation 'com.google.api-client:google-api-client:1.34.1'
+        implementation 'com.google.apis:google-api-services-calendar:v3-rev20220422-1.32.1'
+        implementation 'org.jsoup:jsoup:1.14.3'
+        implementation 'org.postgresql:postgresql:42.3.4'
+        implementation 'org.slf4j:slf4j-simple:1.7.36'
+        implementation 'org.telegram:telegrambots:6.0.1'
     }
 
 jar {
     manifest {
         attributes(
-                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Class-Path': configurations.compileClasspath.collect { it.getName() }.join(' '),
                 'Main-Class': 'hockey_calendar'
         )
     }
@@ -39,9 +39,9 @@ task stage(dependsOn: ['build', 'clean']){
 }
 
 task copyToLib(type: Copy) {
-    into "$buildDir/libs"
-    from(configurations.runtime)
+    into layout.buildDirectory.dir("libs")
+    from(configurations.runtimeClasspath)
 }
 build.dependsOn copyToLib
-
-// https://devcenter.heroku.com/articles/deploying-gradle-apps-on-heroku
+copyToLib.dependsOn distZip
+copyToLib.dependsOn distTar
