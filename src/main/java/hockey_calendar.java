@@ -5,11 +5,6 @@ public class hockey_calendar {
     private static final String location = Resources.getResource("location");
     public static void main(String[] args) {
 
-        // Удалить. Только для отладки
-        // List<Match> matchTable2 = Site.getMatchTable("0f814f7cc4e7cb945ec935e76cbaa43c/Санкт-Петербург/Сезон_2023-2024/4-й_Дивизион/", "rhlspb.ru");
-        // КонецУдаления
-
-
         // Процедуры первоначального заполнения. Запускать при первом запуске в окружении
         /*
         DataBase.createTableMatches();
@@ -17,29 +12,12 @@ public class hockey_calendar {
         DataBase.createTableSubscriptions();
 
         */
-
-        /*
-        // Временные процедурки
-        try {
-            DataBase.executeSQLUpdate("UPDATE matches SET Count = '0' WHERE  matchID = '5825v90220'", null);
-        } catch (Exception e) {
-            // Ошиболнька
-        }
-
-        try {
-            DataBase.executeSQLUpdate("ALTER TABLE matches ADD site_id VARCHAR(40)", null);
-        } catch (SQLException | URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        */
         if (location.equals("prod")) {
             TelegramBot.getInstance().startListen();
         }
 
         // TODO при подключении новой команды, не выдавать спам по загрузке матчей.
         // TODO 3. Сравнивать состав команд. Могут поменять команду а ID оставить старый т.е. в боте больше матчей чем на сайте
-
-        // CalenderGoogle calender = new CalenderGoogle();
 
         Map<String, Team> teams = DataBase.getTeams();
         for (Map.Entry<String, Team> entry : teams.entrySet()) {
