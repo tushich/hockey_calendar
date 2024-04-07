@@ -46,15 +46,15 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     public void sendBroadcastMsg(String message, String team_id, String site_id) {
 
-        /*if (location.equals("prod")) {
+        if (location.equals("prod")) {
             List<String> list = DataBase.getUsersListSubscribedForTeam(team_id, site_id);
             for (String chat_id : list) {
                 sendMsgDirect(chat_id, message, null);
             }
         } else // если шлёт в тесте, то отправялть админу 1 раз
-        {*/
+        {
            sendMsgDirect(admin_chat_id, message, null);
-        //}
+        }
     }
 
     /**
