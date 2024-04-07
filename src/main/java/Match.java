@@ -3,8 +3,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
 public class Match {
+
     public String tournament;
     public String team_id;
     public String round;
@@ -24,10 +27,6 @@ public class Match {
         {
             dif = dif.concat(String.format("\nИзменился турнир:\n%s -> \n%s", tournament, new_match.getTournament()));
         }
-        /*if(!round.equals(new_match.getRound()))
-        {
-            dif = dif.concat(String.format("\nИзменился раунд:\n%s -> \n%s", round, new_match.getRound()));
-        }*/
         if(!startDateTime.equals(new_match.getStartDateTime()))
         {
             dif = dif.concat(String.format("\nИзменилась дата и время:\n%s -> \n%s", getDateString(startDateTime), getDateString(new_match.getStartDateTime())));
@@ -70,9 +69,10 @@ public class Match {
     }
 
     public void setStartDateTime(String date, String time) {
-        DateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.ENGLISH);
+        DateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm Z", Locale.ENGLISH);
+
         try {
-            this.startDateTime  = format.parse(date + " " + time);
+            this.startDateTime  = format.parse(date + " " + time + " +0300"); // храним часовой пояс по гринфвичу
         } catch (ParseException e) {
             System.out.format("\nОшибка установки даты начала для Матча %s\nТекст ошибки:%s", this.matchID, e.getMessage());
             throw new RuntimeException(e);
@@ -148,7 +148,7 @@ public class Match {
 
     private String getDateString(Date dt)
     {
-        DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm Z");
         return df.format(dt);
     }
 
