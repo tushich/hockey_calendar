@@ -259,8 +259,11 @@ public interface DataBase {
         //teams.put("Красные медведи ВЗР РХЛ",        new Team("Красные медведи ВЗР РХЛ",       "rhlspb.ru", Resources.getResource("teamIdRhl_red_bears_main")));
         //teams.put("Красные медведи ВЗР Фарм РХЛ",   new Team("Красные медведи ВЗР Фарм РХЛ",  "rhlspb.ru", Resources.getResource("teamIdRhl_red_bears_farm")));
 
-        teams.put("Феникс ВЗР СПБХЛ",        new Team("Феникс ВЗР СПБХЛ",       "spbhl.ru", Resources.getResource("teamId_Spbhl_Phoenix_main")));
-        teams.put("Феникс ВЗР Фарм СПБХЛ",   new Team("Феникс ВЗР Фарм СПБХЛ",  "spbhl.ru", Resources.getResource("teamId_Spbhl_Phoenix_farm")));
+        teams.put("РХЛ Феникс ВЗР",        new Team("РХЛ Феникс ВЗР",       "rhlspb.ru", Resources.getResource("teamId_RHL_Phoenix_main")));
+        teams.put("РХЛ Феникс ВЗР Фарм",   new Team("РХЛ Феникс ВЗР Фарм",  "rhlspb.ru", Resources.getResource("teamId_RHL_Phoenix_farm")));
+        
+        teams.put("СПБХЛ Феникс ВЗР",        new Team("СПБХЛ Феникс ВЗР",       "spbhl.ru", Resources.getResource("teamId_Spbhl_Phoenix_main")));
+        teams.put("СПБХЛ Феникс ВЗР Фарм",   new Team("СПБХЛ Феникс ВЗР Фарм",  "spbhl.ru", Resources.getResource("teamId_Spbhl_Phoenix_farm")));
 
         //teams.put("Красные медведи 2009",       new Team("Красные медведи 2009",      "fhspb.ru", Resources.getResource("team_red_bears_2009")));
         //teams.put("Красные медведи 2011",       new Team("Красные медведи 2011",      "fhspb.ru", Resources.getResource("team_red_bears_2011")));
