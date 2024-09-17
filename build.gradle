@@ -1,9 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'hockey_calendar'
-//sourceCompatibility = 1.8
-//targetCompatibility = 1.8
+//mainClassName = 'hockey_calendar'
 
 version = '1.0'
 
@@ -34,11 +32,12 @@ jar {
     }
 }
 
-task stage(dependsOn: ['build', 'clean']){
+tasks.register('stage') {
+    dependsOn['build', 'clean']
     build.mustRunAfter clean
 }
 
-task copyToLib(type: Copy) {
+tasks.register('copyToLib', Copy) {
     into layout.buildDirectory.dir("libs")
     from(configurations.runtimeClasspath)
 }
