@@ -37,6 +37,7 @@ public class hockey_calendar {
                     } else // Матч уже есть в базеДанных, значит надо найти различия. Обновить. и Сообщить об обновлении.
                     {
                         String diff = match_from_dataBase.compare(match_from_site);
+                        // TODO Сделать напоминалку про матч за настраиваемое количество часов(168ч) и ссылку на видео присылать за 2 часа(Настраиваемо)
                         if (!diff.isEmpty()) {
                             if (!DataBase.updateMatch(match_from_site))
                                 continue; // не удалось обновить SQL
