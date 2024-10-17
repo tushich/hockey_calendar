@@ -76,7 +76,14 @@ public interface Site {
                 return;
             }
 
-            Elements rows = doc.getElementById("MatchGridView").select("tr");
+            Elements rows = new Elements();
+            try {
+                rows = doc.getElementById("MatchGridView").select("tr");
+            }
+            catch (Exception e) {
+                return; // нет матчей
+            }
+
 
             for (int i = 1; i < rows.size(); i++) {
                 Match match = new Match();
@@ -108,7 +115,7 @@ public interface Site {
                 date = date.substring(9, 13) + "." + date.substring(6, 8) + "." + date.substring(3, 5);
                 match.setStartDateTime(date, time);
                 // TODO ПРотокол проверять по другому, сейчас посчитал что протокол это видеозапись матча ПримерСВидео:https://spbhl.ru/Match?TournamentID=5825&MatchID=90219
-                match.setProtokolExist((cols.get(protokolExistCol).select("a[*=ReportHyperLink]").size()) > 0);
+                match.setProtokolExist((cols.get(protokolExistCol).select("a[id=ReportHyperLink]").size()) > 0);
                 match.setTournament(cols.get(tournamentCol).text());
                 match.setNumber(cols.get(numberCol).text());
                 match.setStadium(cols.get(stadiumCol).select("a[href]").attr("title"));
