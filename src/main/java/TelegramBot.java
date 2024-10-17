@@ -141,7 +141,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     }
                 }
                 else {
-                    sendMsgDirect(update.getMessage().getChatId().toString(), "Ошибка: Неизвестная команда чата", null);
+                    //sendMsgDirect(update.getMessage().getChatId().toString(), "Ошибка: Неизвестная команда чата", null);
                 }
             }
         } else if (update.hasCallbackQuery()) {
