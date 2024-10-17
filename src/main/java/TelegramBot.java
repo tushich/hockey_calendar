@@ -96,6 +96,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public void onUpdateReceived(Update update) {
+        //TODO Для сообщений из групп отключить общение
         if (update.hasMessage()) {
             if (update.getMessage().hasText()) {
 
