@@ -151,45 +151,50 @@ public interface Site {
                 return;
             }
 
-            url = doc.getElementsByClass("turnir").select("a[href]").get(0).attr("abs:href");
+            //url = doc.getElementsByClass("turnir").select("a[href]").get(0).attr("abs:href");
+            for (Element turnir : doc.getElementsByClass("turnir").select("a[href]")) // турниров может быть мно, надо все обойти
+            {
+                url = turnir.attr("abs:href");
 
-            try {
-                doc = Jsoup.connect(url).get();
-            } catch (IOException e) {
-                String errText = String.format("\nОшибка чтения страницы HTML %s\n Текст ошибки:%s", url, e.getMessage());
-                System.out.format(errText);
-                TelegramBot.getInstance().sendMsgToAdmin(errText);
-                return;
-            }
+                try {
+                    doc = Jsoup.connect(url).get();
+                } catch (IOException e) {
+                    String errText = String.format("\nОшибка чтения страницы HTML %s\n Текст ошибки:%s", url, e.getMessage());
+                    System.out.format(errText);
+                    TelegramBot.getInstance().sendMsgToAdmin(errText);
+                    return;
+                }
 
 
-            Elements rows = doc.getElementsByClass("calendar").select("div.item");
+                Elements rows = doc.getElementsByClass("calendar").select("div.item");
 
-            for (Element row : rows) {
-                Match match = new Match();
-                Elements time = row.select("div.time");
-                Elements protokol = row.select("div.protokol").select("a[href]");
-                match.setLinkMatch(protokol.attr("abs:href"));
-                match.setMatchID(protokol.attr("href").replace("/%D0%98%D0%B3%D1%80%D0%B0/", "").replace("/", ""));
-                // 19-10-2023 в 22:15 формат "yyyy.MM.dd HH:mm"
-                String date = time.select("strong").text().substring(0,10);
-                date = date.substring(6,10) + "." + date.substring(3,5) + "." + date.substring(0,2);
-                match.setStartDateTime(date, time.select("strong").text().substring(13,18));
+                for (Element row : rows) {
+                    Match match = new Match();
+                    Elements time = row.select("div.time");
+                    Elements protokol = row.select("div.protokol").select("a[href]");
+                    match.setLinkMatch(protokol.attr("abs:href"));
+                    match.setMatchID(protokol.attr("href").replace("/%D0%98%D0%B3%D1%80%D0%B0/", "").replace("/", ""));
+                    // 19-10-2023 в 22:15 формат "yyyy.MM.dd HH:mm"
+                    String date = time.select("strong").text().substring(0,10);
+                    date = date.substring(6,10) + "." + date.substring(3,5) + "." + date.substring(0,2);
+                    match.setStartDateTime(date, time.select("strong").text().substring(13,18));
 
-                match.setTournament(time.get(0).childNode(3).childNode(0).toString());
-                match.setNumber("");
+                    match.setTournament(time.get(0).childNode(3).childNode(0).toString());
+                    match.setNumber("");
 
-                match.setStadium(time.get(0).childNode(2).toString().replace(", ", ""));
-                match.setTeams(row.select("div.team").get(0).text() + " - " + row.select("div.team").get(1).text());
+                    match.setStadium(time.get(0).childNode(2).toString().replace(", ", ""));
+                    match.setTeams(row.select("div.team").get(0).text() + " - " + row.select("div.team").get(1).text());
 
-                String count = row.select("div.points").text();
+                    String count = row.select("div.points").text();
 
-                match.setProtokolExist(!row.select("div.result").text().equals("")); // протокол добавляют сразу
-                match.setCount(count);
-                match.setTeam_id(team_id);
-                match.setSiteID(siteID);
+                    match.setProtokolExist(!row.select("div.result").text().equals("")); // протокол добавляют сразу
+                    match.setCount(count);
+                    match.setTeam_id(team_id);
+                    match.setSiteID(siteID);
 
-                matchTable.add(match);
+                    matchTable.add(match);
+
+                }
 
             }
 
