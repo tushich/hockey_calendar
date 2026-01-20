@@ -139,17 +139,7 @@ public interface Site {
         {
             // // https://rhlspb.ru/%D0%9A%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D0%B0/0f814f7cc4e7cb945ec935e76cbaa43c/%D0%A1%D0%B0%D0%BD%D0%BA%D1%82-%D0%9F%D0%B5%D1%82%D0%B5%D1%80%D0%B1%D1%83%D1%80%D0%B3/%D0%A1%D0%B5%D0%B7%D0%BE%D0%BD_2023-2024/4-%D0%B9_%D0%94%D0%B8%D0%B2%D0%B8%D0%B7%D0%B8%D0%BE%D0%BD/
 
-            String url = null;
-            try {
-                url = String.format("https://rhlspb.ru/%s/%s/", URLEncoder.encode("Команда", "utf-8"), team_id);
-            } catch (UnsupportedEncodingException e) {
-                String errText = String.format("\nОшибка декодирования слова команда для url\n Текст ошибки:%s", e.toString());
-                System.out.format(errText);
-                TelegramBot.getInstance().sendMsgToAdmin(errText);
-                return;
-            }
-
-
+            String url = String.format("https://rhlspb.ru/%s/%s/", "Команда", team_id);
             // получим самый верхний турнир и ссылку на него
 
             Document doc;
@@ -158,7 +148,7 @@ public interface Site {
                 doc = Jsoup.connect(url).get();
             } catch (IOException e) {
                 String errText = String.format("\nОшибка чтения страницы команды HTML %s\n Текст ошибки:%s", url, e.toString());
-                //System.out.format(errText);
+                System.out.format(errText);
                 TelegramBot.getInstance().sendMsgToAdmin(errText);
                 return;
             }
