@@ -145,7 +145,7 @@ public interface Site {
             try {
                 doc = Jsoup.connect(url).get();
             } catch (IOException e) {
-                String errText = String.format("\nОшибка чтения страницы HTML %s\n Текст ошибки:%s", url, e.getMessage());
+                String errText = String.format("\nОшибка чтения страницы команды HTML %s\n Текст ошибки:%s", url, e.getMessage());
                 System.out.format(errText);
                 TelegramBot.getInstance().sendMsgToAdmin(errText);
                 return;
@@ -159,7 +159,7 @@ public interface Site {
                 try {
                     doc = Jsoup.connect(url).get();
                 } catch (IOException e) {
-                    String errText = String.format("\nОшибка чтения страницы HTML %s\n Текст ошибки:%s", url, e.getMessage());
+                    String errText = String.format("\nОшибка чтения страницы турнира HTML %s\n Текст ошибки:%s", url, e.getMessage());
                     System.out.format(errText);
                     TelegramBot.getInstance().sendMsgToAdmin(errText);
                     return;
