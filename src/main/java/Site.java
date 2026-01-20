@@ -141,7 +141,7 @@ public interface Site {
 
             String url = null;
             try {
-                url = String.format("https://rhlspb.ru/%s/%s/", URLEncoder.encode("команда", "utf-8"), team_id);
+                url = String.format("https://rhlspb.ru/%s/%s/", URLEncoder.encode("Команда", "utf-8"), team_id);
             } catch (UnsupportedEncodingException e) {
                 String errText = String.format("\nОшибка декодирования слова команда для url\n Текст ошибки:%s", e.toString());
                 System.out.format(errText);
