@@ -158,7 +158,7 @@ public interface Site {
                 doc = Jsoup.connect(url).get();
             } catch (IOException e) {
                 String errText = String.format("\nОшибка чтения страницы команды HTML %s\n Текст ошибки:%s", url, e.toString());
-                System.out.format(errText);
+                //System.out.format(errText);
                 TelegramBot.getInstance().sendMsgToAdmin(errText);
                 return;
             }
